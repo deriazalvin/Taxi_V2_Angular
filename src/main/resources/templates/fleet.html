@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Disponibilité')}"></head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<main class="main">
+    <div class="page-title">
+        <div>
+            <h1>Disponibilité de la flotte</h1>
+            <p class="sub">État temps réel des chauffeurs et véhicules</p>
+        </div>
+    </div>
+
+    <div class="cards-grid grid-4">
+        <div class="card" data-aos="fade-up">
+            <div class="stat-icon" style="background:var(--teal-soft);color:var(--teal);">✓</div>
+            <div class="stat-number" th:text="${driversAvailable}" th:attr="data-count=${driversAvailable}">0</div>
+            <div class="stat-label">Chauffeurs disponibles</div>
+        </div>
+        <div class="card" data-aos="fade-up" data-aos-delay="80">
+            <div class="stat-icon" style="background:var(--teal-soft);color:var(--teal);">✓</div>
+            <div class="stat-number" th:text="${vehiclesAvailable}" th:attr="data-count=${vehiclesAvailable}">0</div>
+            <div class="stat-label">Véhicules disponibles</div>
+        </div>
+        <div class="card" data-aos="fade-up" data-aos-delay="160">
+            <div class="stat-icon" style="background:var(--gold-soft);color:#8a6413;">⚠</div>
+            <div class="stat-number" th:text="${expiredLicenses}" th:attr="data-count=${expiredLicenses}">0</div>
+            <div class="stat-label">Permis expirés</div>
+        </div>
+        <div class="card" data-aos="fade-up" data-aos-delay="240">
+            <div class="stat-icon" style="background:#fbe3e3;color:var(--danger);">→</div>
+            <div class="stat-number" th:text="${activeRides}" th:attr="data-count=${activeRides}">0</div>
+            <div class="stat-label">Courses actives</div>
+        </div>
+    </div>
+
+    <h2 style="margin-top:1.8rem;font-size:1.1rem;">Chauffeurs</h2>
+    <div class="table-wrap" data-aos="fade-up">
+        <table class="data row-hover">
+            <thead>
+            <tr><th>Chauffeur</th><th>Statut</th><th>Permis</th><th>Véhicule</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="d : ${drivers}">
+                <td><strong th:text="${d.firstName() + ' ' + d.lastName()}">Nom</strong></td>
+                <td>
+                    <span class="badge badge-ok" th:if="${d.status().name() == 'DISPONIBLE'}" th:text="${d.status()}">DISPONIBLE</span>
+                    <span class="badge badge-warn" th:if="${d.status().name() == 'EN_COURSE'}" th:text="${d.status()}">EN COURSE</span>
+                    <span class="badge badge-info" th:if="${d.status().name() == 'EN_PAUSE'}" th:text="${d.status()}">EN PAUSE</span>
+                    <span class="badge badge-danger" th:if="${d.status().name() == 'SUSPENDU' or d.status().name() == 'INDISPONIBLE'}" th:text="${d.status()}">INACTIF</span>
+                </td>
+                <td>
+                    <span class="badge badge-ok" th:if="${d.licenseValid()}">valide</span>
+                    <span class="badge badge-danger" th:unless="${d.licenseValid()}">expiré</span>
+                </td>
+                <td th:text="${d.vehiclePlate() ?: '—'}">—</td>
+                <td sec:authorize="hasAnyRole('ADMIN','MANAGER','OPERATOR')">
+                    <form th:if="${d.status().name() != 'DISPONIBLE' and d.status().name() != 'EN_COURSE' and d.licenseValid()}"
+                          th:action="@{/drivers/{id}/status(id=${d.id()})}" method="post">
+                        <input type="hidden" name="status" value="DISPONIBLE">
+                        <button class="btn btn-outline btn-sm" type="submit">Rendre disponible</button>
+                    </form>
+                </td>
+                <td sec:authorize="!hasAnyRole('ADMIN','MANAGER','OPERATOR')">—</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2 style="margin-top:1.6rem;font-size:1.1rem;">Véhicules</h2>
+    <div class="table-wrap" data-aos="fade-up">
+        <table class="data row-hover">
+            <thead>
+            <tr><th>Véhicule</th><th>Statut</th><th>Kilométrage</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="v : ${vehicles}">
+                <td>
+                    <strong th:text="${v.plateNumber()}">AB-123-CD</strong>
+                    <div style="font-size:.78rem;color:#55627a;" th:text="${v.brand() + ' ' + v.model()}">Marque</div>
+                </td>
+                <td>
+                    <span class="badge badge-ok" th:if="${v.status().name() == 'DISPONIBLE'}" th:text="${v.status()}">DISPONIBLE</span>
+                    <span class="badge badge-warn" th:if="${v.status().name() == 'EN_COURSE'}" th:text="${v.status()}">EN COURSE</span>
+                    <span class="badge badge-info" th:if="${v.status().name() == 'MAINTENANCE'}" th:text="${v.status()}">MAINTENANCE</span>
+                    <span class="badge badge-danger" th:if="${v.status().name() == 'HORS_SERVICE'}" th:text="${v.status()}">HORS SERVICE</span>
+                </td>
+                <td th:text="${#numbers.formatDecimal(v.mileage(),0,0)} + ' km'">0 km</td>
+                <td sec:authorize="hasAnyRole('ADMIN','MANAGER','OPERATOR')">
+                    <form th:if="${v.status().name() == 'MAINTENANCE' or v.status().name() == 'HORS_SERVICE'}"
+                          th:action="@{/vehicles/{id}/status(id=${v.id()})}" method="post">
+                        <input type="hidden" name="status" value="DISPONIBLE">
+                        <button class="btn btn-outline btn-sm" type="submit">Remettre en service</button>
+                    </form>
+                    <form th:if="${v.status().name() == 'DISPONIBLE'}"
+                          th:action="@{/vehicles/{id}/status(id=${v.id()})}" method="post" data-confirm="Passer ce véhicule en maintenance ?">
+                        <input type="hidden" name="status" value="MAINTENANCE">
+                        <button class="btn btn-outline btn-sm" type="submit">Maintenance</button>
+                    </form>
+                </td>
+                <td sec:authorize="!hasAnyRole('ADMIN','MANAGER','OPERATOR')">—</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

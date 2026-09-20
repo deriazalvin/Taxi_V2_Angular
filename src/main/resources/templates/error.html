@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Erreur')}"></head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<main class="main" style="max-width:620px;margin-top:3rem;">
+    <div class="card" data-aos="fade-up" style="text-align:center;padding:2.2rem;">
+        <div style="font-size:2.6rem;font-weight:800;color:#b5441f;" th:text="${errorTitle ?: 'Erreur'}">Erreur</div>
+        <p style="color:#55627a;margin-top:.4rem;" th:text="${errorMessage ?: 'Une erreur est survenue.'}">Message</p>
+        <a class="btn btn-ripple" style="margin-top:1rem;" th:href="${backUrl ?: '/'}">Retour</a>
+    </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Chauffeur')}"></head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<main class="main" style="max-width:760px;">
+    <div class="page-title">
+        <div>
+            <h1 th:text="${driver.id != null} ? 'Modifier le chauffeur' : 'Nouveau chauffeur'">Chauffeur</h1>
+            <p class="sub">Saisie des informations du chauffeur</p>
+        </div>
+        <a class="btn btn-ghost" th:href="@{/drivers}">← Retour</a>
+    </div>
+
+    <form class="card form-card" th:action="@{/drivers}" method="post" data-aos="fade-up">
+        <input type="hidden" name="id" th:value="${driver.id}">
+
+        <div class="form-grid grid-2">
+            <div class="field">
+                <label for="firstName">Prénom</label>
+                <input type="text" id="firstName" name="firstName" th:value="${driver.firstName}" required>
+            </div>
+            <div class="field">
+                <label for="lastName">Nom</label>
+                <input type="text" id="lastName" name="lastName" th:value="${driver.lastName}" required>
+            </div>
+            <div class="field">
+                <label for="phone">Téléphone</label>
+                <input type="text" id="phone" name="phone" th:value="${driver.phone}" placeholder="06 00 00 00 00">
+            </div>
+            <div class="field">
+                <label for="licenseNumber">N° de permis</label>
+                <input type="text" id="licenseNumber" name="licenseNumber" th:value="${driver.licenseNumber}" required>
+            </div>
+            <div class="field">
+                <label for="licenseExpiryDate">Expiration du permis</label>
+                <input type="date" id="licenseExpiryDate" name="licenseExpiryDate" th:value="${driver.licenseExpiryDate}">
+            </div>
+            <div class="field">
+                <label for="hireDate">Date d'embauche</label>
+                <input type="date" id="hireDate" name="hireDate" th:value="${driver.hireDate}">
+            </div>
+            <div class="field">
+                <label for="status">Statut</label>
+                <select id="status" name="status">
+                    <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}" th:selected="${driver.status == s}">STATUT</option>
+                </select>
+            </div>
+            <div class="field">
+                <label for="vehicleId">Véhicule attitré</label>
+                <select id="vehicleId" name="vehicleId">
+                    <option value="">— Aucun —</option>
+                    <option th:each="v : ${vehicles}" th:value="${v.id()}"
+                            th:text="${v.plateNumber() + ' · ' + v.brand() + ' ' + v.model()}"
+                            th:selected="${driver.vehicleId == v.id()}">AB-123-CD</option>
+                </select>
+            </div>
+            <div class="field">
+                <label for="commissionRate">Commission (%)</label>
+                <input type="number" id="commissionRate" name="commissionRate" step="0.01" th:value="${driver.commissionRate}">
+            </div>
+        </div>
+
+        <div style="display:flex;gap:.6rem;margin-top:1.4rem;">
+            <button type="submit" class="btn btn-ripple">Enregistrer</button>
+            <a class="btn btn-ghost" th:href="@{/drivers}">Annuler</a>
+        </div>
+    </form>
+</main>
+</body>
+</html>

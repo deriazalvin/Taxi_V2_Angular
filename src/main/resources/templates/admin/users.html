@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Administration')}"></head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<main class="main" style="max-width:860px;">
+    <div class="page-title">
+        <div>
+            <h1>Utilisateurs</h1>
+            <p class="sub">Gestion des comptes et des rôles</p>
+        </div>
+        <a class="btn btn-ghost" th:href="@{/admin/config}" style="margin-left:auto;">Score d'attribution →</a>
+    </div>
+
+    <form class="card form-card" th:action="@{/admin/users}" method="post" data-aos="fade-up">
+        <div class="form-grid grid-4">
+            <div class="field">
+                <label for="username">Identifiant</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="field">
+                <label for="password">Mot de passe</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="field">
+                <label for="displayName">Nom affiché</label>
+                <input type="text" id="displayName" name="displayName">
+            </div>
+            <div class="field">
+                <label for="role">Rôle</label>
+                <select id="role" name="role">
+                    <option th:each="r : ${roles}" th:value="${r}" th:text="${r}">ROLE</option>
+                </select>
+            </div>
+        </div>
+        <div style="margin-top:1rem;">
+            <button class="btn btn-ripple" type="submit">Créer l'utilisateur</button>
+        </div>
+    </form>
+
+    <div class="table-wrap" style="margin-top:1.2rem;" data-aos="fade-up">
+        <table class="data row-hover">
+            <thead>
+            <tr><th>Identifiant</th><th>Nom affiché</th><th>Rôle</th><th>Statut</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="u : ${users}">
+                <td><strong th:text="${u.username()}">user</strong></td>
+                <td th:text="${u.displayName()}">Nom</td>
+                <td>
+                    <form th:action="@{/admin/users/{id}/role(id=${u.id()})}" method="post" style="display:inline-flex;gap:.3rem;">
+                        <select name="role" th:style="'width:auto;padding:.3rem .5rem;'">
+                            <option th:each="r : ${roles}" th:value="${r}" th:text="${r}" th:selected="${u.role() == r}">ROLE</option>
+                        </select>
+                        <button class="btn btn-ghost btn-sm" type="submit" th:if="${u.username() != 'admin'}">OK</button>
+                    </form>
+                </td>
+                <td>
+                    <span class="badge badge-ok" th:if="${u.enabled()}">actif</span>
+                    <span class="badge badge-danger" th:unless="${u.enabled()}">désactivé</span>
+                </td>
+                <td>
+                    <form th:if="${u.username() != 'admin'}" th:action="@{/admin/users/{id}/enabled(id=${u.id()})}" method="post" style="display:inline;">
+                        <input type="hidden" name="enabled" th:value="${!u.enabled()}"/>
+                        <button class="btn btn-outline btn-sm" type="submit"
+                                th:text="${u.enabled()} ? 'Désactiver' : 'Activer'">Basculer</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

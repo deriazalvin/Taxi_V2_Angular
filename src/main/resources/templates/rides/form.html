@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Nouvelle course')}"></head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<main class="main" style="max-width:760px;">
+    <div class="page-title">
+        <div>
+            <h1>Nouvelle course</h1>
+            <p class="sub">Enregistrement d'une demande de course</p>
+        </div>
+        <a class="btn btn-ghost" th:href="@{/rides}">← Retour</a>
+    </div>
+
+    <form class="card form-card" th:action="@{/rides}" method="post" data-aos="fade-up">
+        <div class="form-grid grid-2">
+            <div class="field">
+                <label for="clientName">Client</label>
+                <input type="text" id="clientName" name="clientName" th:value="${ride.clientName}" required>
+            </div>
+            <div class="field">
+                <label for="clientPhone">Téléphone</label>
+                <input type="text" id="clientPhone" name="clientPhone" th:value="${ride.clientPhone}" placeholder="06 00 00 00 00">
+            </div>
+            <div class="field">
+                <label for="pickupLocation">Lieu de départ</label>
+                <input type="text" id="pickupLocation" name="pickupLocation" th:value="${ride.pickupLocation}" required>
+            </div>
+            <div class="field">
+                <label for="destination">Destination</label>
+                <input type="text" id="destination" name="destination" th:value="${ride.destination}" required>
+            </div>
+            <div class="field">
+                <label for="distance">Distance (km)</label>
+                <input type="number" id="distance" name="distance" step="0.1" min="0.1" th:value="${ride.distance}">
+            </div>
+            <div class="field">
+                <label for="fare">Course estimée (€)</label>
+                <input type="number" id="fare" name="fare" step="0.01" min="0" th:value="${ride.fare}">
+            </div>
+            <div class="field">
+                <label for="rideDateTime">Départ prévu</label>
+                <input type="datetime-local" id="rideDateTime" name="rideDateTime" th:value="${ride.rideDateTime}">
+            </div>
+        </div>
+
+        <div style="display:flex;gap:.6rem;margin-top:1.4rem;">
+            <button type="submit" class="btn btn-ripple">Enregistrer la course</button>
+            <a class="btn btn-ghost" th:href="@{/rides}">Annuler</a>
+        </div>
+    </form>
+</main>
+</body>
+</html>

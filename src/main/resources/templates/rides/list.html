@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Courses')}"></head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<main class="main">
+    <div class="page-title">
+        <div>
+            <h1>Courses</h1>
+            <p class="sub">Carnet de courses et suivi d'attribution</p>
+        </div>
+        <div style="margin-left:auto;">
+            <a class="btn btn-ripple" th:href="@{/rides/new}" sec:authorize="hasAnyRole('ADMIN','MANAGER','OPERATOR')">+ Nouvelle course</a>
+        </div>
+    </div>
+
+    <form class="filter-bar" th:action="@{/rides}" method="get">
+        <input type="text" name="keyword" th:value="${keyword}" placeholder="Réf., client, trajet…">
+        <select name="status">
+            <option value="">Tous statuts</option>
+            <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}" th:selected="${status == s}">STATUT</option>
+        </select>
+        <button class="btn btn-ghost" type="submit">Filtrer</button>
+        <a class="btn btn-ghost" th:href="@{/rides}">Réinitialiser</a>
+    </form>
+
+    <div class="table-wrap" data-aos="fade-up">
+        <table class="data row-hover">
+            <thead>
+            <tr><th>Réf.</th><th>Client</th><th>Trajet</th><th>Distance</th><th>Tarif</th><th>Chauffeur</th><th>Statut</th><th></th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="r : ${page.content}">
+                <td><a th:href="@{/rides/{id}(id=${r.id()})}" th:text="${r.reference()}" style="font-weight:700;">COURSE-0000</a></td>
+                <td th:text="${r.clientName()}">Client</td>
+                <td th:text="${r.pickupLocation() + ' → ' + r.destination()}" style="font-size:.82rem;">A → B</td>
+                <td th:text="${#numbers.formatDecimal(r.distance(),1,1) + ' km'}">10 km</td>
+                <td th:text="${'€ ' + #numbers.formatDecimal(r.fare(),1,2)}" style="font-weight:700;">€ 0,00</td>
+                <td th:text="${r.driverName() ?: '—'}">—</td>
+                <td>
+                    <span class="badge badge-info" th:if="${r.status().name() == 'EN_ATTENTE'}" th:text="${r.status()}">EN ATTENTE</span>
+                    <span class="badge badge-warn" th:if="${r.status().name() == 'ASSIGNEE'}" th:text="${r.status()}">ASSIGNÉE</span>
+                    <span class="badge badge-warn" th:if="${r.status().name() == 'EN_COURS'}" th:text="${r.status()}">EN COURS</span>
+                    <span class="badge badge-ok" th:if="${r.status().name() == 'TERMINEE'}" th:text="${r.status()}">TERMINÉE</span>
+                    <span class="badge badge-danger" th:if="${r.status().name() == 'ANNULEE'}" th:text="${r.status()}">ANNULÉE</span>
+                </td>
+                <td><a class="btn btn-outline btn-sm" th:href="@{/rides/{id}(id=${r.id()})}">Ouvrir</a></td>
+            </tr>
+            <tr th:if="${page.content.isEmpty()}">
+                <td colspan="8" style="color:#55627a;text-align:center;">Aucune course ne correspond aux critères.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div style="display:flex;gap:.5rem;margin-top:1rem;flex-wrap:wrap;" th:if="${page.totalPages > 1}">
+        <a class="btn btn-ghost btn-sm" th:href="@{/rides(keyword=${keyword},status=${status},page=${page.number-1})}"
+           th:classappend="${page.number == 0} ? 'disabled'">← Précédent</a>
+        <span style="align-self:center;font-size:.9rem;color:#55627a;" th:text="${'Page ' + (page.number+1) + ' / ' + page.totalPages}">Page 1 / 1</span>
+        <a class="btn btn-ghost btn-sm" th:href="@{/rides(keyword=${keyword},status=${status},page=${page.number+1})}"
+           th:classappend="${page.last} ? 'disabled'">Suivant →</a>
+    </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Statistiques')}"></head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<main class="main">
+    <div class="page-title">
+        <div>
+            <h1>Statistiques</h1>
+            <p class="sub">Revenus et activité de la flotte</p>
+        </div>
+    </div>
+
+    <form class="filter-bar" th:action="@{/stats}" method="get" data-aos="fade-up">
+        <label style="align-self:center;font-size:.85rem;font-weight:600;">Du
+            <input type="date" name="from" th:value="${from}" style="width:auto;display:inline-block;">
+        </label>
+        <label style="align-self:center;font-size:.85rem;font-weight:600;">au
+            <input type="date" name="to" th:value="${to}" style="width:auto;display:inline-block;">
+        </label>
+        <button class="btn btn-ghost" type="submit">Afficher</button>
+    </form>
+
+    <div class="cards-grid grid-4">
+        <div class="card" data-aos="fade-up">
+            <div class="stat-label">Courses terminées</div>
+            <div class="stat-number" th:text="${activity.totalRides()}" th:attr="data-count=${activity.totalRides()}">0</div>
+        </div>
+        <div class="card" data-aos="fade-up" data-aos-delay="80">
+            <div class="stat-label">Chiffre d'affaires</div>
+            <div class="stat-number" th:text="${'€ ' + #numbers.formatDecimal(revenue.totalRevenue(),1,2)}">€ 0</div>
+        </div>
+        <div class="card" data-aos="fade-up" data-aos-delay="160">
+            <div class="stat-label">Commission encaissée</div>
+            <div class="stat-number" th:text="${'€ ' + #numbers.formatDecimal(revenue.totalCommission(),1,2)}">€ 0</div>
+        </div>
+        <div class="card" data-aos="fade-up" data-aos-delay="240">
+            <div class="stat-label">Taux d'annulation</div>
+            <div class="stat-number" th:text="${activity.cancellationRate() + '%'}">0%</div>
+        </div>
+    </div>
+
+    <div class="cards-grid grid-2" style="margin-top:1rem;">
+        <div class="card" data-aos="fade-up">
+            <div class="stat-label">Chauffeur le plus actif</div>
+            <div class="stat-number" th:text="${activity.mostActiveDriver() ?: '—'}" style="font-size:1.4rem;">
+                —</div>
+            <div class="stat-label" th:text="${activity.mostActiveDriverRides() + ' courses'}">0 courses</div>
+        </div>
+        <div class="card" data-aos="fade-up" data-aos-delay="80">
+            <div class="stat-label">Véhicule le plus utilisé</div>
+            <div class="stat-number" th:text="${activity.mostUsedVehicle() ?: '—'}" style="font-size:1.4rem;">
+                —</div>
+            <div class="stat-label" th:text="${activity.mostUsedVehicleRides() + ' courses'}">0 courses</div>
+        </div>
+    </div>
+
+    <h2 style="margin-top:1.8rem;font-size:1.15rem;">Par jour</h2>
+    <div class="table-wrap" data-aos="fade-up">
+        <table class="data row-hover">
+            <thead>
+            <tr><th>Date</th><th>Courses</th><th>Annulées</th><th>CA</th><th>Revenu chauffeur</th><th>Distance</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="d : ${activity.byDay()}">
+                <td th:text="${#temporals.format(d.date(),'dd/MM/yyyy')}">date</td>
+                <td th:text="${d.rideCount()}">0</td>
+                <td>
+                    <span class="badge badge-danger" th:if="${d.cancelledCount() > 0}" th:text="${d.cancelledCount()}">0</span>
+                    <span th:unless="${d.cancelledCount() > 0}">0</span>
+                </td>
+                <td th:text="${'€ ' + #numbers.formatDecimal(d.revenue(),1,2)}">€ 0</td>
+                <td>&nbsp;</td>
+                <td th:text="${#numbers.formatDecimal(d.distanceKm(),1,1)} + ' km'">0 km</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="cards-grid grid-2" style="margin-top:1rem;">
+        <div class="card" data-aos="fade-up">
+            <h2 style="font-size:1rem;margin-bottom:.8rem;">Revenus par chauffeur</h2>
+            <div class="kv" th:each="d : ${revenue.byDriver()}">
+                <span th:text="${d.label()}">Nom</span>
+                <strong th:text="${'€ ' + #numbers.formatDecimal(d.revenue(),1,2) + ' · ' + d.rideCount() + ' courses'}">€ 0</strong>
+            </div>
+            <p th:if="${revenue.byDriver().isEmpty()}" style="color:#55627a;font-size:.9rem;">Aucun revenu sur la période.</p>
+        </div>
+        <div class="card" data-aos="fade-up" data-aos-delay="80">
+            <h2 style="font-size:1rem;margin-bottom:.8rem;">Revenus par véhicule</h2>
+            <div class="kv" th:each="d : ${revenue.byVehicle()}">
+                <span th:text="${d.label()}">Immat</span>
+                <strong th:text="${'€ ' + #numbers.formatDecimal(d.revenue(),1,2) + ' · ' + d.rideCount() + ' courses'}">€ 0</strong>
+            </div>
+            <p th:if="${revenue.byVehicle().isEmpty()}" style="color:#55627a;font-size:.9rem;">Aucun revenu sur la période.</p>
+        </div>
+    </div>
+</main>
+</body>
+</html>

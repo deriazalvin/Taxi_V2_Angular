@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Chauffeurs')}"></head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<main class="main">
+    <div class="page-title">
+        <div>
+            <h1>Chauffeurs</h1>
+            <p class="sub">Gestion des chauffeurs de la flotte</p>
+        </div>
+        <div style="margin-left:auto;">
+            <a class="btn btn-ripple" th:href="@{/drivers/new}" sec:authorize="hasAnyRole('ADMIN','MANAGER','OPERATOR')">+ Nouveau chauffeur</a>
+        </div>
+    </div>
+
+    <form class="filter-bar" th:action="@{/drivers}" method="get">
+        <input type="text" name="keyword" th:value="${keyword}" placeholder="Nom, téléphone, permis…">
+        <select name="status">
+            <option value="">Tous statuts</option>
+            <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}" th:selected="${status == s}">STATUT</option>
+        </select>
+        <button class="btn btn-ghost" type="submit">Filtrer</button>
+        <a class="btn btn-ghost" th:href="@{/drivers}">Réinitialiser</a>
+    </form>
+
+    <div class="table-wrap" data-aos="fade-up">
+        <table class="data row-hover">
+            <thead>
+            <tr><th>Chauffeur</th><th>Téléphone</th><th>Permis</th><th>Véhicule</th><th>Statut</th><th>Commission</th><th></th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="d : ${page.content}">
+                <td>
+                    <strong th:text="${d.firstName() + ' ' + d.lastName()}">Nom</strong>
+                    <div style="font-size:.78rem;color:#55627a;">Embauché le <span th:text="${#temporals.format(d.hireDate(),'dd/MM/yyyy')}">date</span></div>
+                </td>
+                <td th:text="${d.phone()}">06 00 00 00 00</td>
+                <td>
+                    <span th:text="${d.licenseNumber()}" style="font-weight:600;">PERMIS</span>
+                    <span class="badge badge-ok" th:if="${d.licenseValid()}">valide</span>
+                    <span class="badge badge-danger" th:unless="${d.licenseValid()}">expiré</span>
+                </td>
+                <td th:text="${d.vehiclePlate() ?: '—'}">AB-123-CD</td>
+                <td>
+                    <span class="badge badge-ok" th:if="${d.status().name() == 'DISPONIBLE'}" th:text="${d.status()}">DISPONIBLE</span>
+                    <span class="badge badge-warn" th:if="${d.status().name() == 'EN_COURSE'}" th:text="${d.status()}">EN COURSE</span>
+                    <span class="badge badge-info" th:if="${d.status().name() == 'EN_PAUSE'}" th:text="${d.status()}">EN PAUSE</span>
+                    <span class="badge badge-danger" th:if="${d.status().name() == 'SUSPENDU' or d.status().name() == 'INDISPONIBLE'}" th:text="${d.status()}">INACTIF</span>
+                </td>
+                <td th:text="${d.commissionRate() + ' %'}">10 %</td>
+                <td><a class="btn btn-outline btn-sm" th:href="@{/drivers/{id}/edit(id=${d.id()})}">Éditer</a></td>
+            </tr>
+            <tr th:if="${page.content.isEmpty()}">
+                <td colspan="7" style="color:#55627a;text-align:center;">Aucun chauffeur ne correspond aux critères.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div style="display:flex;gap:.5rem;margin-top:1rem;flex-wrap:wrap;" th:if="${page.totalPages > 1}">
+        <a class="btn btn-ghost btn-sm" th:href="@{/drivers(keyword=${keyword},status=${status},page=${page.number-1})}"
+           th:classappend="${page.number == 0} ? 'disabled'">← Précédent</a>
+        <span style="align-self:center;font-size:.9rem;color:#55627a;" th:text="${'Page ' + (page.number+1) + ' / ' + page.totalPages}">Page 1 / 1</span>
+        <a class="btn btn-ghost btn-sm" th:href="@{/drivers(keyword=${keyword},status=${status},page=${page.number+1})}"
+           th:classappend="${page.last} ? 'disabled'">Suivant →</a>
+    </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Course')}"></head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<main class="main" style="max-width:860px;">
+    <div class="page-title">
+        <div>
+            <h1 th:text="${ride.reference()}">COURSE-000001</h1>
+            <p class="sub">Détail de la course et cycle de vie</p>
+        </div>
+        <a class="btn btn-ghost" th:href="@{/rides}" style="margin-left:auto;">← Retour</a>
+    </div>
+
+    <div class="cards-grid grid-2" data-aos="fade-up">
+        <div class="card">
+            <h2 style="font-size:1rem;margin-bottom:.8rem;">Course</h2>
+            <div class="kv"><span>Client</span><strong th:text="${ride.clientName()}">Client</strong></div>
+            <div class="kv"><span>Téléphone</span><strong th:text="${ride.clientPhone() ?: '—'}">06</strong></div>
+            <div class="kv"><span>Trajet</span><strong th:text="${ride.pickupLocation() + ' → ' + ride.destination()}">A → B</strong></div>
+            <div class="kv"><span>Distance</span><strong th:text="${#numbers.formatDecimal(ride.distance(),1,1)} + ' km'">10 km</strong></div>
+            <div class="kv"><span>Départ prévu</span>
+                <strong th:text="${#temporals.format(ride.rideDateTime(),'dd/MM/yyyy HH:mm')}">date</strong></div>
+            <div class="kv"><span>Tarif</span><strong th:text="${'€ ' + #numbers.formatDecimal(ride.fare(),1,2)}">€ 0,00</strong></div>
+            <div class="kv"><span>Statut</span>
+                <strong>
+                    <span class="badge badge-info" th:if="${ride.status().name() == 'EN_ATTENTE'}" th:text="${ride.status()}">EN ATTENTE</span>
+                    <span class="badge badge-warn" th:if="${ride.status().name() == 'ASSIGNEE'}" th:text="${ride.status()}">ASSIGNÉE</span>
+                    <span class="badge badge-warn" th:if="${ride.status().name() == 'EN_COURS'}" th:text="${ride.status()}">EN COURS</span>
+                    <span class="badge badge-ok" th:if="${ride.status().name() == 'TERMINEE'}" th:text="${ride.status()}">TERMINÉE</span>
+                    <span class="badge badge-danger" th:if="${ride.status().name() == 'ANNULEE'}" th:text="${ride.status()}">ANNULÉE</span>
+                </strong>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 style="font-size:1rem;margin-bottom:.8rem;">Affectation</h2>
+            <div class="kv"><span>Chauffeur</span><strong th:text="${ride.driverName() ?: '— non assigné —'}">—</strong></div>
+            <div class="kv"><span>Véhicule</span><strong th:text="${ride.vehiclePlate() ?: '—'}">—</strong></div>
+            <div class="kv" th:if="${ride.assignmentScore() != null}">
+                <span>Score d'attribution</span><strong th:text="${ride.assignmentScore()}">0</strong>
+            </div>
+            <div class="kv" th:if="${ride.status().name() == 'ASSIGNEE' or ride.status().name() == 'EN_COURS'}">
+                <span>Démarrage</span>
+                <strong th:if="${ride.startedAt()}" th:text="${#temporals.format(ride.startedAt(),'dd/MM HH:mm')}">—</strong>
+                <strong th:unless="${ride.startedAt()}">—</strong>
+            </div>
+            <div class="kv" th:if="${ride.status().name() == 'TERMINEE'}">
+                <span>Terminée</span>
+                <strong th:text="${#temporals.format(ride.completedAt(),'dd/MM/yyyy HH:mm')}">—</strong>
+            </div>
+            <div class="kv" th:if="${ride.status().name() == 'ANNULEE'}">
+                <span>Motif d'annulation</span><strong th:text="${ride.cancelReason() ?: 'non précisé'}">—</strong>
+            </div>
+
+            <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem;"
+                 sec:authorize="hasAnyRole('ADMIN','MANAGER','OPERATOR')">
+                <a class="btn btn-ripple" th:if="${ride.status().name() == 'EN_ATTENTE'}"
+                   th:href="@{/rides/{id}/assign(id=${ride.id()})}">Attribuer</a>
+                <form th:if="${ride.status().name() == 'ASSIGNEE'}" th:action="@{/rides/{id}/start(id=${ride.id()})}" method="post">
+                    <button class="btn btn-ripple" type="submit">Démarrer</button>
+                </form>
+                <form th:if="${ride.status().name() == 'EN_COURS'}" th:action="@{/rides/{id}/complete(id=${ride.id()})}" method="post">
+                    <button class="btn btn-ripple" type="submit">Terminer</button>
+                </form>
+                <form th:if="${ride.status().name() == 'EN_ATTENTE' or ride.status().name() == 'ASSIGNEE'}"
+                      th:action="@{/rides/{id}/cancel(id=${ride.id()})}" method="post" data-confirm="Annuler cette course ?">
+                    <input type="hidden" name="reason" value="Annulation manuelle">
+                    <button class="btn btn-danger" type="submit">Annuler</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Tableau de bord')}"></head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<main class="main">
+    <div class="page-title">
+        <div>
+            <h1>Tableau de bord</h1>
+            <p class="sub">Activité de la flotte et courses en attente</p>
+        </div>
+        <div style="margin-left:auto;">
+            <a class="btn btn-ripple" th:href="@{/rides/new}">+ Nouvelle course</a>
+        </div>
+    </div>
+
+    <div class="cards-grid grid-4">
+        <div class="card tilt card-lift" data-aos="fade-up">
+            <div class="stat-icon" style="background:#fbe3e3;color:#b5441f;">!</div>
+            <div class="stat-number" th:text="${waitingCount}" th:attr="data-count=${waitingCount}">0</div>
+            <div class="stat-label">Courses en attente</div>
+        </div>
+        <div class="card tilt card-lift" data-aos="fade-up" data-aos-delay="80">
+            <div class="stat-icon" style="background:var(--gold-soft);color:#8a6413;">→</div>
+            <div class="stat-number" th:text="${activeCount}" th:attr="data-count=${activeCount}">0</div>
+            <div class="stat-label">Courses actives</div>
+        </div>
+        <div class="card tilt card-lift" data-aos="fade-up" data-aos-delay="160">
+            <div class="stat-icon" style="background:var(--teal-soft);color:var(--teal);">✓</div>
+            <div class="stat-number" th:text="${ridesToday}" th:attr="data-count=${ridesToday}">0</div>
+            <div class="stat-label">Courses terminées aujourd'hui</div>
+        </div>
+        <div class="card tilt card-lift" data-aos="fade-up" data-aos-delay="240">
+            <div class="stat-icon" style="background:var(--ok-soft);color:var(--ok);">Σ</div>
+            <div class="stat-number" th:text="${stats.totalRides()}" th:attr="data-count=${stats.totalRides()}">0</div>
+            <div class="stat-label">Activité (14 jours)</div>
+        </div>
+    </div>
+
+    <div class="cards-grid grid-3" style="margin-top:1rem;">
+        <div class="card" data-aos="fade-up">
+            <div class="stat-label">Chauffeurs disponibles</div>
+            <div class="stat-number" th:text="${driversAvailable}" th:attr="data-count=${driversAvailable}" style="color:var(--teal);">0</div>
+        </div>
+        <div class="card" data-aos="fade-up" data-aos-delay="60">
+            <div class="stat-label">Véhicules disponibles</div>
+            <div class="stat-number" th:text="${vehiclesAvailable}" th:attr="data-count=${vehiclesAvailable}" style="color:var(--teal);">0</div>
+        </div>
+        <div class="card" data-aos="fade-up" data-aos-delay="120">
+            <div class="stat-label">Taux d'annulation (14 j)</div>
+            <div class="stat-number" th:text="${stats.cancellationRate() + '%'}">0%</div>
+        </div>
+    </div>
+
+    <h2 style="margin-top:1.8rem;font-size:1.15rem;">Courses en attente d'attribution</h2>
+    <div class="table-wrap" data-aos="fade-up">
+        <table class="data row-hover">
+            <thead>
+            <tr><th>Réf.</th><th>Client</th><th>Trajet</th><th>Distance</th><th>Tarif</th><th>Départ prévu</th><th></th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="r : ${waitingRides}">
+                <td><a th:href="@{/rides/{id}(id=${r.id()})}" th:text="${r.reference()}" style="font-weight:700;">COURSE-0000</a></td>
+                <td th:text="${r.clientName()}">Client</td>
+                <td th:text="${r.pickupLocation() + ' → ' + r.destination()}" style="font-size:.82rem;">A → B</td>
+                <td th:text="${#numbers.formatDecimal(r.distance(),1,1)} + ' km'">10 km</td>
+                <td th:text="${'€ ' + #numbers.formatDecimal(r.fare(),1,2)}" style="font-weight:700;">€ 0,00</td>
+                <td th:text="${#temporals.format(r.rideDateTime(),'dd/MM HH:mm')}">01/01 10:00</td>
+                <td><a class="btn btn-outline btn-sm" th:href="@{/rides/{id}/assign(id=${r.id()})}">Attribuer</a></td>
+            </tr>
+            <tr th:if="${waitingRides.isEmpty()}">
+                <td colspan="7" style="color:#55627a;text-align:center;">Aucune course en attente.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

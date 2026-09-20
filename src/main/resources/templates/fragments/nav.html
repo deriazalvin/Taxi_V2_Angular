@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body th:fragment="nav">
+<header class="topbar">
+    <div class="topbar-inner">
+        <a class="brand" th:href="@{/dashboard}">
+            <span class="brand-mark">T</span>
+            <span class="brand-name">Taxi<span class="brand-accent">Fleet</span></span>
+        </a>
+        <nav class="nav-links" id="main-nav">
+            <a data-nav="/dashboard" th:href="@{/dashboard}">Tableau de bord</a>
+            <a data-nav="/rides" th:href="@{/rides}">Courses</a>
+            <a data-nav="/drivers" th:href="@{/drivers}">Chauffeurs</a>
+            <a data-nav="/clients" th:href="@{/clients}">Clients</a>
+            <a data-nav="/vehicles" th:href="@{/vehicles}">Véhicules</a>
+            <a data-nav="/fleet" th:href="@{/fleet}">Disponibilité</a>
+            <a data-nav="/stats" th:href="@{/stats}">Statistiques</a>
+            <a sec:authorize="hasRole('ADMIN')" data-nav="/admin" th:href="@{/admin/users}">Admin</a>
+        </nav>
+        <div class="topbar-user">
+            <span class="user-chip" th:text="${#authentication.name}">admin</span>
+            <form class="logout-form" th:action="@{/logout}" method="post">
+                <button type="submit" class="btn btn-outline btn-sm">Déconnexion</button>
+            </form>
+        </div>
+    </div>
+</header>
+
+<div th:if="${success}" class="flash flash-success" th:text="${success}"></div>
+<div th:if="${error}" class="flash flash-error" th:text="${error}"></div>
+</body>
+</html>

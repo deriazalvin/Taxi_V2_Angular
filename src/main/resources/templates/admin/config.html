@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Score')}"></head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<main class="main" style="max-width:640px;">
+    <div class="page-title">
+        <div>
+            <h1>Score d'attribution</h1>
+            <p class="sub">Coefficients de pondération du score des chauffeurs</p>
+        </div>
+        <a class="btn btn-ghost" th:href="@{/admin/users}" style="margin-left:auto;">← Utilisateurs</a>
+    </div>
+
+    <div class="card" data-aos="fade-up">
+        <p style="font-size:.92rem;color:#55627a;line-height:1.55;">
+            Le score de chaque chauffeur éligible est calculé ainsi :
+            <br><br>
+            <strong>score = charge × <span th:text="${score.loadWeight()}">2.00</span>
+            + ancienneté × <span th:text="${score.seniorityWeight()}">0.50</span>
+            + véhicule × <span th:text="${score.vehicleWeight()}">0.50</span></strong>
+            <br><br>
+            avec <em>charge</em> = nombre de courses aujourd'hui normalisé sur la population candidate,
+            <em>ancienneté</em> = années de service (plafonné à 10 ans) et <em>véhicule</em> = capacité,
+            chacun ramené sur 100.
+        </p>
+        <form th:action="@{/admin/config}" method="post" class="form-card">
+            <div class="form-grid grid-3">
+                <div class="field">
+                    <label for="loadWeight">Poids charge</label>
+                    <input type="number" id="loadWeight" name="loadWeight" step="0.05" th:value="${score.loadWeight()}" required>
+                </div>
+                <div class="field">
+                    <label for="seniorityWeight">Poids ancienneté</label>
+                    <input type="number" id="seniorityWeight" name="seniorityWeight" step="0.05" th:value="${score.seniorityWeight()}" required>
+                </div>
+                <div class="field">
+                    <label for="vehicleWeight">Poids véhicule</label>
+                    <input type="number" id="vehicleWeight" name="vehicleWeight" step="0.05" th:value="${score.vehicleWeight()}" required>
+                </div>
+            </div>
+            <div style="margin-top:1.2rem;">
+                <button class="btn btn-ripple" type="submit">Enregistrer</button>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>

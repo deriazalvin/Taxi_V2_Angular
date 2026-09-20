@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Attribution')}"></head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<main class="main" style="max-width:860px;">
+    <div class="page-title">
+        <div>
+            <h1 th:text="${'Attribution — ' + ride.reference()}">Attribution</h1>
+            <p class="sub" th:text="${ride.pickupLocation() + ' → ' + ride.destination()}">A → B</p>
+        </div>
+        <a class="btn btn-ghost" th:href="@{/rides/{id}(id=${ride.id()})}" style="margin-left:auto;">← Retour au détail</a>
+    </div>
+
+    <form class="card form-card" th:action="@{/rides/{id}/assign(id=${ride.id()})}" method="post" data-aos="fade-up">
+        <h2 style="font-size:1rem;margin-bottom:.5rem;">Attribution automatique</h2>
+        <p style="font-size:.9rem;color:#55627a;margin-bottom:.8rem;">
+            L'algorithme sélectionne le meilleur chauffeur éligible selon le score pondéré
+            (charge <strong class="accent">·</strong> ancienneté <strong class="accent">·</strong> véhicule).
+        </p>
+        <div class="actions">
+            <button type="submit" class="btn btn-ripple" name="driverId">Auto (meilleur score)</button>
+        </div>
+    </form>
+
+    <h2 style="margin-top:1.6rem;font-size:1.1rem;" data-aos="fade-up">Candidats éligibles</h2>
+    <div class="table-wrap" data-aos="fade-up">
+        <table class="data row-hover">
+            <thead>
+            <tr><th>Chauffeur</th><th>Véhicule</th><th>Capacité</th><th>Charge</th><th>Ancienneté</th><th>Véhicule</th><th>Score</th><th></th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="c : ${candidates}">
+                <td><strong th:text="${c.driverName()}">Nom</strong></td>
+                <td th:text="${c.vehiclePlate()}">AB-123-CD</td>
+                <td th:text="${c.capacity() + ' places'}">4</td>
+                <td th:text="${c.loadPoints() != null ? c.loadPoints() + ' / 100' : '—'}">—</td>
+                <td th:text="${c.seniorityPoints() != null ? c.seniorityPoints() + ' / 100' : '—'}">—</td>
+                <td th:text="${c.vehiclePoints() != null ? c.vehiclePoints() + ' / 100' : '—'}">—</td>
+                <td><span class="badge badge-ok" th:text="${#numbers.formatDecimal(c.score(),1,1)}">0,0</span></td>
+                <td>
+                    <form th:action="@{/rides/{id}/assign(id=${ride.id()})}" method="post">
+                        <input type="hidden" name="driverId" th:value="${c.driverId()}">
+                        <button class="btn btn-outline btn-sm" type="submit">Assigner</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${candidates.isEmpty()}">
+                <td colspan="8" style="color:#8a6413;text-align:center;">
+                    Aucun chauffeur éligible actuellement (chauffeurs ou véhicules indisponibles).
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

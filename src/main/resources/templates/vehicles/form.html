@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Véhicule')}"></head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<main class="main" style="max-width:760px;">
+    <div class="page-title">
+        <div>
+            <h1 th:text="${vehicle.id != null} ? 'Modifier le véhicule' : 'Nouveau véhicule'">Véhicule</h1>
+            <p class="sub">Saisie des informations du véhicule</p>
+        </div>
+        <a class="btn btn-ghost" th:href="@{/vehicles}">← Retour</a>
+    </div>
+
+    <form class="card form-card" th:action="@{/vehicles}" method="post" data-aos="fade-up">
+        <input type="hidden" name="id" th:value="${vehicle.id}">
+
+        <div class="form-grid grid-2">
+            <div class="field">
+                <label for="plateNumber">Immatriculation</label>
+                <input type="text" id="plateNumber" name="plateNumber" th:value="${vehicle.plateNumber}" required>
+            </div>
+            <div class="field">
+                <label for="brand">Marque</label>
+                <input type="text" id="brand" name="brand" th:value="${vehicle.brand}" required>
+            </div>
+            <div class="field">
+                <label for="model">Modèle</label>
+                <input type="text" id="model" name="model" th:value="${vehicle.model}" required>
+            </div>
+            <div class="field">
+                <label for="modelYear">Année</label>
+                <input type="number" id="modelYear" name="modelYear" th:value="${vehicle.modelYear}">
+            </div>
+            <div class="field">
+                <label for="capacity">Capacité (places)</label>
+                <input type="number" id="capacity" name="capacity" th:value="${vehicle.capacity}">
+            </div>
+            <div class="field">
+                <label for="mileage">Kilométrage</label>
+                <input type="number" id="mileage" name="mileage" step="1" th:value="${vehicle.mileage}">
+            </div>
+            <div class="field">
+                <label for="status">Statut</label>
+                <select id="status" name="status">
+                    <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}" th:selected="${vehicle.status == s}">STATUT</option>
+                </select>
+            </div>
+        </div>
+
+        <div style="display:flex;gap:.6rem;margin-top:1.4rem;">
+            <button type="submit" class="btn btn-ripple">Enregistrer</button>
+            <a class="btn btn-ghost" th:href="@{/vehicles}">Annuler</a>
+        </div>
+    </form>
+</main>
+</body>
+</html>

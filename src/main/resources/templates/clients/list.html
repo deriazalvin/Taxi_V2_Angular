@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Clients')}"></head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<main class="main">
+    <div class="page-title">
+        <div>
+            <h1>Clients</h1>
+            <p class="sub">Gestion des clients de la flotte</p>
+        </div>
+        <div style="margin-left:auto;">
+            <a class="btn btn-ripple" th:href="@{/clients/new}" sec:authorize="hasAnyRole('ADMIN','MANAGER','OPERATOR')">+ Nouveau client</a>
+        </div>
+    </div>
+
+    <form class="filter-bar" th:action="@{/clients}" method="get">
+        <input type="text" name="keyword" th:value="${keyword}" placeholder="Nom, téléphone, email…">
+        <button class="btn btn-ghost" type="submit">Filtrer</button>
+        <a class="btn btn-ghost" th:href="@{/clients}">Réinitialiser</a>
+    </form>
+
+    <div class="table-wrap" data-aos="fade-up">
+        <table class="data row-hover">
+            <thead>
+            <tr><th>Client</th><th>Téléphone</th><th>Email</th><th>Adresse</th><th>Depuis</th><th></th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="c : ${page.content}">
+                <td><strong th:text="${c.name()}">Nom</strong></td>
+                <td th:text="${c.phone()}">06 00 00 00 00</td>
+                <td th:text="${c.email() ?: '—'}">email@exemple.fr</td>
+                <td th:text="${c.address() ?: '—'}">Adresse</td>
+                <td th:text="${#temporals.format(c.createdAt(),'dd/MM/yyyy')}">date</td>
+                <td>
+                    <a class="btn btn-outline btn-sm" th:href="@{/clients/{id}/edit(id=${c.id()})}" sec:authorize="hasAnyRole('ADMIN','MANAGER','OPERATOR')">Éditer</a>
+                    <form style="display:inline;" th:action="@{/clients/{id}/delete(id=${c.id()})}" method="post" sec:authorize="hasRole('ADMIN')">
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer ce client ?');">Suppr.</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${page.content.isEmpty()}">
+                <td colspan="6" style="color:#55627a;text-align:center;">Aucun client ne correspond aux critères.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div style="display:flex;gap:.5rem;margin-top:1rem;flex-wrap:wrap;" th:if="${page.totalPages > 1}">
+        <a class="btn btn-ghost btn-sm" th:href="@{/clients(keyword=${keyword},page=${page.number-1})}"
+           th:classappend="${page.number == 0} ? 'disabled'">← Précédent</a>
+        <span style="align-self:center;font-size:.9rem;color:#55627a;" th:text="${'Page ' + (page.number+1) + ' / ' + page.totalPages}">Page 1 / 1</span>
+        <a class="btn btn-ghost btn-sm" th:href="@{/clients(keyword=${keyword},page=${page.number+1})}"
+           th:classappend="${page.last} ? 'disabled'">Suivant →</a>
+    </div>
+</main>
+</body>
+</html>
