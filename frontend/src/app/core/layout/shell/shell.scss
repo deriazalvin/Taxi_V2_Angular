@@ -1,0 +1,145 @@
+@use '../../../../styles/index' as *;
+
+.shell {
+  min-height: 100vh;
+}
+
+//  Barre superieure
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: $z-header;
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+  padding: $space-3 $space-5;
+  background: rgba($paper-2, 0.88);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid $line;
+}
+
+.brand {
+  font-size: $fs-lg;
+  font-weight: $fw-bold;
+  letter-spacing: -0.01em;
+  color: $ink;
+
+  &:hover {
+    text-decoration: none;
+    color: $brand-ink;
+  }
+}
+
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  padding: $space-2;
+  background: none;
+  border: 1px solid $line;
+  border-radius: $rad-sm;
+  cursor: pointer;
+
+  span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: $ink;
+    border-radius: 2px;
+  }
+}
+
+.user-box {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  margin-left: auto;
+}
+
+.user-name {
+  font-size: $fs-sm;
+  font-weight: $fw-semibold;
+}
+
+.role-badge {
+  @include badge($teal-soft, $teal);
+}
+
+.btn-ghost {
+  @include button-base;
+
+  padding: 0.4rem 0.8rem;
+  font-size: $fs-sm;
+  color: $ink-soft;
+  background: transparent;
+  border-color: $line;
+
+  &:hover:not(:disabled) {
+    color: $danger;
+    border-color: $danger;
+  }
+}
+
+//  Corps : menu lateral + contenu
+.shell-body {
+  display: flex;
+  align-items: stretch;
+  min-height: calc(100vh - 57px);
+}
+
+.sidebar {
+  flex: 0 0 240px;
+  padding: $space-5 $space-3;
+  background: $paper-2;
+  border-right: 1px solid $line;
+
+  nav {
+    display: flex;
+    flex-direction: column;
+    gap: $space-1;
+    position: sticky;
+    top: 89px;
+  }
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+  padding: $space-6;
+}
+
+//  Responsive
+@include md-down {
+  .menu-toggle {
+    display: flex;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 57px;
+    bottom: 0;
+    left: 0;
+    z-index: $z-sidebar;
+    width: 240px;
+    transform: translateX(-100%);
+    transition: transform $duration $ease;
+    box-shadow: $shadow-md;
+
+    &.open {
+      transform: translateX(0);
+    }
+
+    nav {
+      position: static;
+    }
+  }
+
+  .content {
+    padding: $space-4;
+  }
+
+  .user-name {
+    display: none;
+  }
+}
+

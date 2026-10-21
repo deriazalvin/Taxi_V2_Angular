@@ -1,0 +1,39 @@
+<div class="shell">
+  <header class="topbar">
+    <button
+      type="button"
+      class="menu-toggle"
+      (click)="menuOpen.set(!menuOpen())"
+      [attr.aria-expanded]="menuOpen()"
+      aria-label="Ouvrir le menu"
+    >
+      <span></span><span></span><span></span>
+    </button>
+
+    <a class="brand" routerLink="/dashboard">TaxiFleet</a>
+
+    <div class="user-box">
+      @if (user(); as current) {
+        <span class="user-name">{{ current.displayName || current.username }}</span>
+        <span class="role-badge">{{ current.role }}</span>
+      }
+      <button type="button" class="btn-ghost" (click)="logout()">Deconnexion</button>
+    </div>
+  </header>
+
+  <div class="shell-body">
+    <aside class="sidebar" [class.open]="menuOpen()">
+      <nav>
+        @for (item of navItems(); track item.path) {
+          <a [routerLink]="item.path" (click)="closeMenu()">
+            {{ item.label }}
+          </a>
+        }
+      </nav>
+    </aside>
+
+    <main class="content">
+      <router-outlet />
+    </main>
+  </div>
+</div>
