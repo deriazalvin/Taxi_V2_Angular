@@ -82,6 +82,7 @@
 
       <article class="card actions-card">
         <h2>Actions</h2>
+
         @if (current.status === 'EN_ATTENTE') {
           <button
             type="button"
@@ -107,6 +108,10 @@
                       {{ candidate.vehiclePlate ?? 'Sans vehicule' }} — score
                       {{ candidate.score }}
                     </span>
+                    <span class="muted small">
+                      charge {{ candidate.loadPoints }} / anciennete {{ candidate.seniorityPoints }} /
+                      vehicule {{ candidate.vehiclePoints }}
+                    </span>
                   </div>
                   <button
                     type="button"
@@ -120,6 +125,28 @@
               }
             </div>
           }
+        }
+
+        @if (current.status === 'ASSIGNEE') {
+          <button type="button" class="btn-primary" [disabled]="busy()" (click)="start()">
+            Demarrer la course
+          </button>
+        }
+
+        @if (current.status === 'EN_COURS') {
+          <button type="button" class="btn-primary" [disabled]="busy()" (click)="complete()">
+            Terminer la course
+          </button>
+        }
+
+        @if (current.status === 'EN_ATTENTE' || current.status === 'ASSIGNEE' || current.status === 'EN_COURS') {
+          <button type="button" class="btn-danger" [disabled]="busy()" (click)="cancel()">
+            Annuler la course
+          </button>
+        }
+
+        @if (current.status === 'TERMINEE' || current.status === 'ANNULEE') {
+          <p class="muted">Cette course est cloturee, aucune action n'est disponible.</p>
         }
       </article>
     </div>

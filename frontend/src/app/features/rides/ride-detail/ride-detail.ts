@@ -92,4 +92,58 @@ export class RideDetail {
     });
   }
 
+  /** Demarre la course. */
+  start(): void {
+    this.action((ride) => this.rideService.start(ride.id), 'Course demarree.');
+  }
+
+  /** Termine la course. */
+  complete(): void {
+    this.action((ride) => this.rideService.complete(ride.id), 'Course terminee.');
+  }
+
+  /** Annule la course. */
+  cancel(): void {
+    const reason = prompt("Motif de l'annulation (facultatif) :") ?? undefined;
+
+    this.busy.set(true);
+    this.error.set(null);
+
+    this.rideService.cancel(this.rideId(), reason).subscribe({
+      next: (ride) => {
+        this.ride.set(ride);
+        this.busy.set(false);
+        this.info.set('Course annulee.');
+      },
+      error: () => {
+        this.busy.set(false);
+        this.error.set("Impossible d'annuler la course.");
+      },
+    });
+  }
+
+  private action(
+    call: (ride: Ride) => ReturnType<RideService['start']>,
+    successMessage: string,
+  ): void {
+    const ride = this.ride();
+    if (!ride) {
+      return;
+    }
+
+    this.busy.set(true);
+    this.error.set(null);
+
+    call(ride).subscribe({
+      next: (updated) => {
+        this.ride.set(updated);
+        this.busy.set(false);
+        this.info.set(successMessage);
+      },
+      error: () => {
+        this.busy.set(false);
+        this.error.set("L'operation n'a pas pu aboutir.");
+      },
+    });
+  }
 }
