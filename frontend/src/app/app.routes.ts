@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { Shell } from './core/layout/shell/shell';
 import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
 
@@ -8,16 +9,21 @@ export const routes: Routes = [
     loadComponent: () => import('./features/auth/login/login').then((m) => m.Login),
   },
   {
-    path: 'dashboard',
+    path: '',
+    component: Shell,
     canActivate: [authGuard],
-    loadComponent: () => import('./features/dashboard/dashboard').then((m) => m.Dashboard),
+    children: [
+      { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./features/dashboard/dashboard').then((m) => m.Dashboard),
+      },
+      {
+        path: 'admin',
+        canActivate: [roleGuard],
+        data: { roles: ['ROLE_ADMIN'], title: 'Administration' },
+        loadComponent: () => import('./features/admin/admin').then((m) => m.Admin),
+      },
+    ],
   },
-  {
-    path: 'admin',
-    canActivate: [authGuard, roleGuard],
-    data: { roles: ['ROLE_ADMIN'] },
-    loadComponent: () => import('./features/admin/admin').then((m) => m.Admin),
-  },
-  { path: '', pathMatch: 'full', redirectTo: 'login' },
-  { path: '**', redirectTo: 'login' },
 ];
