@@ -82,7 +82,45 @@
 
       <article class="card actions-card">
         <h2>Actions</h2>
-        <p class="muted">Les actions sur la course seront disponibles dans une prochaine etape.</p>
+        @if (current.status === 'EN_ATTENTE') {
+          <button
+            type="button"
+            class="btn-primary"
+            [disabled]="busy()"
+            (click)="assignAutomatically()"
+          >
+            Affecter automatiquement
+          </button>
+
+          <button type="button" class="btn-secondary" [disabled]="busy()" (click)="loadCandidates()">
+            Voir les candidats
+          </button>
+
+          @if (candidates().length > 0) {
+            <div class="candidates">
+              <h3>Candidats</h3>
+              @for (candidate of candidates(); track candidate.driverId) {
+                <div class="candidate">
+                  <div class="candidate-info">
+                    <strong>{{ candidate.driverName }}</strong>
+                    <span class="muted">
+                      {{ candidate.vehiclePlate ?? 'Sans vehicule' }} — score
+                      {{ candidate.score }}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    class="btn btn-sm"
+                    [disabled]="busy()"
+                    (click)="assignTo(candidate.driverId, null)"
+                  >
+                    Affecter
+                  </button>
+                </div>
+              }
+            </div>
+          }
+        }
       </article>
     </div>
   }
