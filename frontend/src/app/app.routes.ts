@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { Shell } from './core/layout/shell/shell';
 import { authGuard } from './core/guards/auth.guard';
-import { roleGuard } from './core/guards/role.guard';
+import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -90,14 +90,14 @@ export const routes: Routes = [
       },
       {
         path: 'admin',
-        canActivate: [roleGuard],
+        canActivate: [adminGuard],
         data: { roles: ['ROLE_ADMIN'], title: 'Administration' },
         loadComponent: () =>
           import('./features/admin/admin-users/admin-users').then((m) => m.AdminUsers),
       },
       {
         path: 'admin/score',
-        canActivate: [roleGuard],
+        canActivate: [adminGuard],
         data: { roles: ['ROLE_ADMIN'], title: 'Scoring' },
         loadComponent: () =>
           import('./features/admin/admin-score/admin-score').then((m) => m.AdminScore),
