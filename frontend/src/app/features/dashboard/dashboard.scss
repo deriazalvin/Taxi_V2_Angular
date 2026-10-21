@@ -1,41 +1,97 @@
 @use '../../../styles/index' as *;
 
 .dashboard {
-  .page-header {
-    margin-bottom: $space-6;
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: $space-4;
+    margin-bottom: $space-5;
+  }
 
-    h1 {
-      font-size: $fs-2xl;
+  .kpi {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+
+    .kpi-label {
+      font-size: $fs-xs;
+      font-weight: $fw-semibold;
+      letter-spacing: 0.05em;
+      color: $ink-soft;
+      text-transform: uppercase;
     }
 
-    .subtitle {
-      margin: 0;
+    .kpi-value {
+      font-size: $fs-2xl;
+      font-weight: $fw-bold;
+      color: $brand-ink;
+    }
+  }
+
+  .columns {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: $space-4;
+    margin-bottom: $space-5;
+  }
+
+  h2 {
+    margin-bottom: $space-3;
+    font-size: $fs-md;
+    color: $ink-soft;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .ranking {
+    display: flex;
+    flex-direction: column;
+
+    li {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: $space-3;
+      align-items: baseline;
+      padding: $space-2 0;
+      border-bottom: 1px solid $line;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    .rank-label {
+      font-weight: $fw-medium;
+    }
+
+    .rank-value {
+      font-weight: $fw-bold;
+      color: $brand-ink;
+    }
+
+    .rank-count {
+      font-size: $fs-xs;
       color: $ink-soft;
     }
   }
-}
 
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: $space-4;
-}
+  .highlights {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: $space-4;
 
-.card {
-  @include card;
+    h2 {
+      margin-bottom: $space-1;
+    }
 
-  padding: $space-5;
-
-  h2 {
-    margin-bottom: $space-2;
-    font-size: $fs-md;
-    color: $ink-soft;
+    p {
+      margin: 0 0 $space-4;
+    }
   }
 
-  .placeholder {
-    margin: 0;
+  .muted {
+    margin-left: $space-2;
     font-size: $fs-sm;
     color: $ink-soft;
-    opacity: 0.7;
   }
 }

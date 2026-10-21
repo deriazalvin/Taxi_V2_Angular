@@ -1,23 +1,107 @@
 <section class="dashboard">
   <header class="page-header">
-    <h1>Tableau de bord</h1>
-    @if (user(); as current) {
-      <p class="subtitle">Bienvenue {{ current.displayName || current.username }}</p>
-    }
+    <div>
+      <h1>Tableau de bord</h1>
+      @if (revenue(); as stats) {
+        <p class="subtitle">
+          Periode du {{ stats.from | date: 'dd/MM/yyyy' }} au {{ stats.to | date: 'dd/MM/yyyy' }}
+        </p>
+      }
+    </div>
+    <div class="spacer"></div>
+    <a class="btn-secondary" routerLink="/statistics">Statistiques detaillees</a>
   </header>
 
-  <div class="cards">
-    <article class="card">
-      <h2>Courses</h2>
-      <p class="placeholder">Bientot disponible</p>
+  @if (error(); as message) {
+    <p class="alert alert-error" role="alert">{{ message }}</p>
+  }
+
+  @if (loading()) {
+    <p class="loading">Chargement...</p>
+  } @else {
+    <div class="kpis">
+      <article class="card kpi">
+        <span class="kpi-label">Courses</span>
+        <span class="kpi-value">{{ revenue()?.totalRides ?? 0 }}</span>
+      </article>
+
+      <article class="card kpi">
+        <span class="kpi-label">Chiffre d'affaires</span>
+        <span class="kpi-value">{{ revenue()?.totalRevenue ?? 0 }} &euro;</span>
+      </article>
+
+      <article class="card kpi">
+        <span class="kpi-label">Commission</span>
+        <span class="kpi-value">{{ revenue()?.totalCommission ?? 0 }} &euro;</span>
+      </article>
+
+      <article class="card kpi">
+        <span class="kpi-label">Annulations</span>
+        <span class="kpi-value">{{ activity()?.cancelledRides ?? 0 }}</span>
+      </article>
+
+      <article class="card kpi">
+        <span class="kpi-label">Distance totale</span>
+        <span class="kpi-value">{{ activity()?.totalDistanceKm ?? 0 }} km</span>
+      </article>
+
+      <article class="card kpi">
+        <span class="kpi-label">Panier moyen</span>
+        <span class="kpi-value">{{ revenue()?.averageRevenue ?? 0 }} &euro;</span>
+      </article>
+    </div>
+
+    <div class="columns">
+      <article class="card">
+        <h2>Chiffre d'affaires par chauffeur</h2>        @if ((revenue()?.byDriver ?? []).length === 0) {
+          <p class="muted">Aucune donnee sur la periode.</p>
+        } @else {
+          <ul class="ranking">
+            @for (item of revenue()?.byDriver ?? []; track item.label) {
+              <li>
+                <span class="rank-label">{{ item.label }}</span>
+                <span class="rank-value">{{ item.revenue }} &euro;</span>
+                <span class="rank-count">{{ item.rideCount }} course(s)</span>
+              </li>
+            }
+          </ul>
+        }
+      </article>
+
+      <article class="card">
+        <h2>Chiffre d'affaires par vehicule</h2>
+        @if ((revenue()?.byVehicle ?? []).length === 0) {
+          <p class="muted">Aucune donnee sur la periode.</p>
+        } @else {
+          <ul class="ranking">
+            @for (item of revenue()?.byVehicle ?? []; track item.label) {
+              <li>
+                <span class="rank-label">{{ item.label }}</span>
+                <span class="rank-value">{{ item.revenue }} &euro;</span>
+                <span class="rank-count">{{ item.rideCount }} course(s)</span>
+              </li>
+            }
+          </ul>
+        }
+      </article>
+    </div>
+
+    <article class="card highlights">
+      <h2>Chauffeur le plus actif</h2>
+      <p>
+        <strong>{{ activity()?.mostActiveDriver ?? '—' }}</strong>
+        <span class="muted">
+          ({{ activity()?.mostActiveDriverRides ?? 0 }} course(s))
+        </span>
+      </p>
+
+      <h2>Vehicule le plus utilise</h2>
+      <p>
+        <strong>{{ activity()?.mostUsedVehicle ?? '—' }}</strong>
+        <span class="muted">
+          ({{ activity()?.mostUsedVehicleRides ?? 0 }} course(s))
+        </span>
+      </p>
     </article>
-    <article class="card">
-      <h2>Chauffeurs</h2>
-      <p class="placeholder">Bientot disponible</p>
-    </article>
-    <article class="card">
-      <h2>Chiffre d'affaires</h2>
-      <p class="placeholder">Bientot disponible</p>
-    </article>
-  </div>
+  }
 </section>
