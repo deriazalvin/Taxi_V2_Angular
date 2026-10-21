@@ -1,0 +1,39 @@
+<section class="ride-waiting">
+  <header class="page-header">
+    <div>
+      <h1>Courses en attente</h1>
+      <p class="subtitle">{{ rides().length }} course(s) a affecter</p>
+    </div>
+    <div class="spacer"></div>
+    <a class="btn btn-secondary" routerLink="/rides">Toutes les courses</a>
+  </header>
+
+  @if (error(); as message) {
+    <p class="alert alert-error" role="alert">{{ message }}</p>
+  }
+
+  @if (loading()) {
+    <p class="loading">Chargement...</p>
+  } @else if (rides().length === 0) {
+    <p class="empty-state">Aucune course en attente d'affectation.</p>
+  } @else {
+    <div class="cards">
+      @for (ride of rides(); track ride.id) {
+        <article class="card">
+          <header>
+            <strong>{{ ride.reference }}</strong>
+            <span class="muted">{{ ride.rideDateTime | date: 'dd/MM/yyyy HH:mm' }}</span>
+          </header>
+
+          <p class="client">{{ ride.clientName }} — {{ ride.clientPhone }}</p>
+          <p class="route">
+            {{ ride.pickupLocation }} <span aria-hidden="true">&rarr;</span> {{ ride.destination }}
+          </p>
+          <p class="muted">{{ ride.distance }} km — {{ ride.fare }} &euro;</p>
+
+          <a class="btn-primary" [routerLink]="['/rides', ride.id]">Affecter</a>
+        </article>
+      }
+    </div>
+  }
+</section>

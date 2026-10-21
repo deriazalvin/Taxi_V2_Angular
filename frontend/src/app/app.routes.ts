@@ -68,6 +68,20 @@ export const routes: Routes = [
         loadComponent: () => import('./features/rides/ride-list/ride-list').then((m) => m.RideList),
       },
       {
+        path: 'rides/new',
+        loadComponent: () => import('./features/rides/ride-form/ride-form').then((m) => m.RideForm),
+      },
+      {
+        path: 'rides/waiting',
+        loadComponent: () =>
+          import('./features/rides/ride-waiting/ride-waiting').then((m) => m.RideWaiting),
+      },
+      {
+        path: 'rides/:id',
+        loadComponent: () =>
+          import('./features/rides/ride-detail/ride-detail').then((m) => m.RideDetail),
+      },
+      {
         path: 'statistics',
         data: { title: 'Statistiques' },
         loadComponent: () =>

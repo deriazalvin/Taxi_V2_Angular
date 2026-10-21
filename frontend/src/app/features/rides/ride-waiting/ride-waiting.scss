@@ -1,0 +1,44 @@
+@use '../../../../styles/index' as *;
+
+.ride-waiting {
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: $space-4;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+
+    header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: $space-2;
+    }
+
+    .client {
+      margin: 0;
+      font-weight: $fw-semibold;
+    }
+
+    .route {
+      margin: 0;
+      font-size: $fs-sm;
+      color: $ink-soft;
+    }
+
+    .muted {
+      font-size: $fs-sm;
+      color: $ink-soft;
+    }
+
+    .btn-primary {
+      margin-top: auto;
+      align-self: flex-start;
+      text-decoration: none;
+    }
+  }
+}
