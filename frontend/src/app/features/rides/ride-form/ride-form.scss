@@ -1,0 +1,9 @@
+@use '../../../../styles/index' as *;
+
+.ride-form {
+  max-width: 880px;
+
+  form.card {
+    padding: $space-6;
+  }
+}

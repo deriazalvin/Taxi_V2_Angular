@@ -1,0 +1,122 @@
+<section class="ride-form">
+  <header class="page-header">
+    <div>
+      <h1>Nouvelle course</h1>
+      <p class="subtitle">Renseignez les informations de la course a planifier.</p>
+    </div>
+  </header>
+
+  @if (error(); as message) {
+    <p class="alert alert-error" role="alert">{{ message }}</p>
+  }
+
+  <form class="card" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+    <div class="form-grid">
+      <div class="field">
+        <label for="clientName">Nom du client</label>
+        <input
+          id="clientName"
+          type="text"
+          formControlName="clientName"
+          placeholder="Atelier Lumiere"
+          [attr.aria-invalid]="form.controls.clientName.invalid && form.controls.clientName.touched"
+        />
+        @if (form.controls.clientName.invalid && form.controls.clientName.touched) {
+          <small class="error">Le nom du client est obligatoire.</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="clientPhone">Telephone du client</label>
+        <input
+          id="clientPhone"
+          type="tel"
+          formControlName="clientPhone"
+          placeholder="07 10 20 30 40"
+          [attr.aria-invalid]="form.controls.clientPhone.invalid && form.controls.clientPhone.touched"
+        />
+        @if (form.controls.clientPhone.invalid && form.controls.clientPhone.touched) {
+          <small class="error">Le telephone est obligatoire.</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="pickupLocation">Lieu de prise en charge</label>
+        <input
+          id="pickupLocation"
+          type="text"
+          formControlName="pickupLocation"
+          placeholder="Gare de Lyon, Paris"
+          [attr.aria-invalid]="form.controls.pickupLocation.invalid && form.controls.pickupLocation.touched"
+        />
+        @if (form.controls.pickupLocation.invalid && form.controls.pickupLocation.touched) {
+          <small class="error">Le lieu de prise en charge est obligatoire.</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="destination">Destination</label>
+        <input
+          id="destination"
+          type="text"
+          formControlName="destination"
+          placeholder="Aeroport CDG, Terminal 2"
+          [attr.aria-invalid]="form.controls.destination.invalid && form.controls.destination.touched"
+        />
+        @if (form.controls.destination.invalid && form.controls.destination.touched) {
+          <small class="error">La destination est obligatoire.</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="distance">Distance (km)</label>
+        <input
+          id="distance"
+          type="number"
+          step="0.1"
+          formControlName="distance"
+          placeholder="35"
+          [attr.aria-invalid]="form.controls.distance.invalid && form.controls.distance.touched"
+        />
+        @if (form.controls.distance.invalid && form.controls.distance.touched) {
+          <small class="error">La distance est obligatoire (0,1 km minimum).</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="fare">Tarif (&euro;)</label>
+        <input
+          id="fare"
+          type="number"
+          step="0.01"
+          formControlName="fare"
+          placeholder="65.00"
+          [attr.aria-invalid]="form.controls.fare.invalid && form.controls.fare.touched"
+        />
+        @if (form.controls.fare.invalid && form.controls.fare.touched) {
+          <small class="error">Le tarif est obligatoire.</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="rideDateTime">Date et heure</label>
+        <input
+          id="rideDateTime"
+          type="datetime-local"
+          formControlName="rideDateTime"
+          [attr.aria-invalid]="form.controls.rideDateTime.invalid && form.controls.rideDateTime.touched"
+        />
+        @if (form.controls.rideDateTime.invalid && form.controls.rideDateTime.touched) {
+          <small class="error">La date et l'heure sont obligatoires.</small>
+        }
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-primary" [disabled]="loading()">
+        {{ loading() ? 'Creation...' : 'Creer la course' }}
+      </button>
+      <a class="btn btn-secondary" routerLink="/rides">Annuler</a>
+    </div>
+  </form>
+</section>
