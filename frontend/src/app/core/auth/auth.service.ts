@@ -3,11 +3,15 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { CurrentUser } from '../models/current-user';
 
+/** Cle de stockage des identifiants de session (sessionStorage). */
+const SESSION_STORAGE_KEY = 'taxifleet.session';
+
 /**
  * Service d'authentification HTTP Basic.
  *
- * Les identifiants sont conserves en memoire pour la session en cours.
- * La persistance (sessionStorage) est ajoutee dans une etape ulterieure.
+ * Les identifiants sont conserves en memoire pour la session en cours et
+ * persistes dans sessionStorage afin de survivre a un rechargement de page.
+ * La session est fermee a la fermeture de l'onglet du navigateur.
  */
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -41,13 +45,39 @@ export class AuthService {
 
     this.credentials = { username, password };
     this.userSignal.set(user);
+    this.persistSession(username, password);
     return user;
+  }
+
+  /**
+   * Restaure une session persistee dans sessionStorage, si elle est encore valide.
+   * Appele au demarrage de l'application.
+   */
+  async restoreSession(): Promise<void> {
+    const stored = this.readPersistedSession();
+    if (!stored) {
+      return;
+    }
+
+    try {
+      const user = await firstValueFrom(
+        this.http.get<CurrentUser>('/api/me', {
+          headers: this.buildBasicHeader(stored.username, stored.password),
+        }),
+      );
+      this.credentials = stored;
+      this.userSignal.set(user);
+    } catch {
+      // Session expiree ou identifiants modifies : on repart de zero.
+      this.clearPersistedSession();
+    }
   }
 
   /** Ferme la session courante. */
   logout(): void {
     this.credentials = null;
     this.userSignal.set(null);
+    this.clearPersistedSession();
   }
 
   /**
@@ -86,5 +116,46 @@ export class AuthService {
         String.fromCharCode(parseInt(hex, 16)),
       ),
     );
+  }
+
+  /**
+   * Enregistre les identifiants de session dans sessionStorage.
+   */
+  private persistSession(username: string, password: string): void {
+    try {
+      sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify({ username, password }));
+    } catch {
+      // Stockage indisponible (mode prive strict) : la session reste en memoire.
+    }
+  }
+
+  /**
+   * Relit les identifiants de session depuis sessionStorage.
+   */
+  private readPersistedSession(): { username: string; password: string } | null {
+    try {
+      const raw = sessionStorage.getItem(SESSION_STORAGE_KEY);
+      if (!raw) {
+        return null;
+      }
+      const parsed = JSON.parse(raw) as { username?: string; password?: string };
+      if (!parsed.username || !parsed.password) {
+        return null;
+      }
+      return { username: parsed.username, password: parsed.password };
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Supprime les identifiants de session de sessionStorage.
+   */
+  private clearPersistedSession(): void {
+    try {
+      sessionStorage.removeItem(SESSION_STORAGE_KEY);
+    } catch {
+      // Rien a faire.
+    }
   }
 }
