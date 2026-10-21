@@ -1,0 +1,56 @@
+<div class="login-page">
+  <section class="login-card">
+    <header class="login-header">
+      <span class="logo">TaxiFleet</span>
+      <h1>Connexion</h1>
+      <p>Accedez a la gestion de votre flotte de taxis.</p>
+    </header>
+
+    @if (error(); as message) {
+      <p class="alert" role="alert">{{ message }}</p>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <label for="username">Identifiant</label>
+      <input
+        id="username"
+        type="text"
+        formControlName="username"
+        autocomplete="username"
+        placeholder="admin"
+        [attr.aria-invalid]="form.controls.username.invalid && form.controls.username.touched"
+      />
+      @if (form.controls.username.invalid && form.controls.username.touched) {
+        <small class="field-error">L'identifiant est obligatoire.</small>
+      }
+
+      <label for="password">Mot de passe</label>
+      <input
+        id="password"
+        type="password"
+        formControlName="password"
+        autocomplete="current-password"
+        placeholder="••••••••"
+        [attr.aria-invalid]="form.controls.password.invalid && form.controls.password.touched"
+      />
+      @if (form.controls.password.invalid && form.controls.password.touched) {
+        <small class="field-error">Le mot de passe est obligatoire.</small>
+      }
+
+      <button type="submit" class="btn-primary" [disabled]="loading()">
+        {{ loading() ? 'Connexion...' : 'Se connecter' }}
+      </button>
+    </form>
+
+    <footer class="login-footer">
+      <p>
+        Demonstration :
+        <strong>admin</strong> /
+        <strong>password</strong>
+      </p>
+      <p class="roles">
+        Roles : admin, manager, operator, user
+      </p>
+    </footer>
+  </section>
+</div>

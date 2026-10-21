@@ -1,0 +1,123 @@
+@use '../../../../styles/index' as *;
+
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: $space-6;
+}
+
+.login-card {
+  @include card;
+
+  width: 100%;
+  max-width: 420px;
+  padding: $space-8;
+  border-radius: $rad-lg;
+  box-shadow: $shadow-md;
+}
+
+.login-header {
+  margin-bottom: $space-6;
+  text-align: center;
+
+  .logo {
+    display: inline-block;
+    margin-bottom: $space-4;
+    padding: $space-1 $space-3;
+    font-size: $fs-sm;
+    font-weight: $fw-bold;
+    letter-spacing: 0.08em;
+    color: $brand-ink;
+    text-transform: uppercase;
+    background: $brand-soft;
+    border-radius: $rad-pill;
+  }
+
+  h1 {
+    margin-bottom: $space-2;
+    font-size: $fs-2xl;
+  }
+
+  p {
+    margin: 0;
+    font-size: $fs-sm;
+    color: $ink-soft;
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    margin-bottom: $space-2;
+    font-size: $fs-sm;
+    font-weight: $fw-semibold;
+  }
+
+  input {
+    margin-bottom: $space-2;
+    padding: 0.6rem 0.85rem;
+    background: $paper-2;
+    border: 1px solid $line;
+    border-radius: $rad-sm;
+    transition: border-color $duration $ease, box-shadow $duration $ease;
+
+    &:focus {
+      border-color: $brand;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba($brand, 0.15);
+    }
+
+    &[aria-invalid='true'] {
+      border-color: $danger;
+    }
+  }
+}
+
+.field-error {
+  margin-bottom: $space-3;
+  font-size: $fs-xs;
+  color: $danger;
+}
+
+.btn-primary {
+  @include button-base;
+
+  margin-top: $space-4;
+  padding: 0.7rem 1rem;
+  color: $paper-2;
+  background: $brand;
+
+  &:hover:not(:disabled) {
+    background: $brand-ink;
+  }
+}
+
+.alert {
+  margin-bottom: $space-4;
+  padding: $space-3 $space-4;
+  font-size: $fs-sm;
+  color: $danger;
+  background: $danger-soft;
+  border-radius: $rad-sm;
+}
+
+.login-footer {
+  margin-top: $space-6;
+  padding-top: $space-4;
+  font-size: $fs-xs;
+  color: $ink-soft;
+  text-align: center;
+  border-top: 1px solid $line;
+
+  p {
+    margin: 0 0 $space-1;
+  }
+
+  .roles {
+    opacity: 0.75;
+  }
+}

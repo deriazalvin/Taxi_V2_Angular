@@ -1,0 +1,14 @@
+@use '../../../styles/index' as *;
+
+.dashboard {
+  padding: $space-6;
+
+  h1 {
+    font-size: $fs-2xl;
+  }
+
+  .placeholder {
+    max-width: 60ch;
+    color: $ink-soft;
+  }
+}
