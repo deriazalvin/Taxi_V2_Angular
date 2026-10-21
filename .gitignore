@@ -52,3 +52,6 @@ logs/
 # ===== Systeme =====
 .DS_Store
 Thumbs.db
+
+# Raccourci local (scripts de commit)
+/commits
