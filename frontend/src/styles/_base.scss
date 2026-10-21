@@ -1,0 +1,166 @@
+// ============================================================
+//  Reset + base — TaxiFleet
+// ============================================================
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+// ---------- Variables CSS exposees ----------
+// Les memes tokens que les variables SCSS, utilisables depuis
+// n'importe quel style de composant via var(--...).
+:root {
+  --ink: #{$ink};
+  --ink-soft: #{$ink-soft};
+  --paper: #{$paper};
+  --paper-2: #{$paper-2};
+  --card: #{$card};
+  --line: #{$line};
+
+  --brand: #{$brand};
+  --brand-2: #{$brand-2};
+  --brand-ink: #{$brand-ink};
+  --brand-soft: #{$brand-soft};
+
+  --teal: #{$teal};
+  --teal-soft: #{$teal-soft};
+  --gold: #{$gold};
+  --gold-soft: #{$gold-soft};
+  --danger: #{$danger};
+  --danger-soft: #{$danger-soft};
+  --ok: #{$ok};
+  --ok-soft: #{$ok-soft};
+  --info: #{$info};
+  --info-soft: #{$info-soft};
+
+  --radius-sm: #{$rad-sm};
+  --radius: #{$rad};
+  --radius-lg: #{$rad-lg};
+
+  --shadow-sm: #{$shadow-sm};
+  --shadow-md: #{$shadow-md};
+  --shadow-lg: #{$shadow-lg};
+
+  --font: #{$font};
+  --font-mono: #{$font-mono};
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: $font;
+  font-size: $fs-base;
+  line-height: $lh-base;
+  color: $ink;
+  background:
+    radial-gradient(1000px 420px at 85% -8%, rgba($brand, 0.1), transparent 60%),
+    radial-gradient(720px 360px at -6% 18%, rgba($teal, 0.08), transparent 55%),
+    $paper;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0 0 $space-2;
+  line-height: $lh-tight;
+  font-weight: $fw-bold;
+}
+
+p {
+  margin: 0 0 $space-3;
+}
+
+a {
+  color: $brand-ink;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+img,
+svg {
+  max-width: 100%;
+  display: block;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+// ---------- Accessibilite ----------
+:focus-visible {
+  @include focus-ring;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: $space-4;
+  z-index: $z-toast;
+  padding: $space-2 $space-4;
+  background: $ink;
+  color: $paper-2;
+  border-radius: 0 0 $rad-sm $rad-sm;
+
+  &:focus {
+    top: 0;
+  }
+}
+
+// ---------- Utilitaires ----------
+.text-muted {
+  color: $ink-soft;
+}
+
+.text-danger {
+  color: $danger;
+}
+
+.text-ok {
+  color: $ok;
+}
+
+.truncate {
+  @include truncate;
+}

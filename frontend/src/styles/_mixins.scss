@@ -1,0 +1,102 @@
+// ============================================================
+//  Mixins — TaxiFleet
+// ============================================================
+@use 'tokens' as *;
+
+// ---------- Responsive ----------
+@mixin sm-down {
+  @media (max-width: #{$bp-sm - 1px}) { @content; }
+}
+
+@mixin md-down {
+  @media (max-width: #{$bp-md - 1px}) { @content; }
+}
+
+@mixin lg-down {
+  @media (max-width: #{$bp-lg - 1px}) { @content; }
+}
+
+@mixin md-up {
+  @media (min-width: #{$bp-md}) { @content; }
+}
+
+@mixin lg-up {
+  @media (min-width: #{$bp-lg}) { @content; }
+}
+
+// ---------- Focus accessible ----------
+@mixin focus-ring($color: $brand) {
+  outline: 2px solid rgba($color, 0.55);
+  outline-offset: 2px;
+}
+
+// ---------- Carte ----------
+@mixin card {
+  background: $card;
+  border: 1px solid $line;
+  border-radius: $rad;
+  box-shadow: $shadow-sm;
+}
+
+// ---------- Bouton ----------
+@mixin button-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+  padding: 0.55rem 1rem;
+  font-family: $font;
+  font-size: $fs-base;
+  font-weight: $fw-semibold;
+  line-height: 1;
+  border: 1px solid transparent;
+  border-radius: $rad-sm;
+  cursor: pointer;
+  transition: background-color $duration $ease, border-color $duration $ease,
+    color $duration $ease, box-shadow $duration $ease, transform $duration-fast $ease;
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  &:not(:disabled):active {
+    transform: translateY(1px);
+  }
+}
+
+// ---------- Etat vide ----------
+@mixin empty-state {
+  padding: $space-10 $space-6;
+  text-align: center;
+  color: $ink-soft;
+  background: $paper-2;
+  border: 1px dashed $line;
+  border-radius: $rad;
+}
+
+// ---------- Badge de statut ----------
+@mixin badge($bg, $fg) {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-1;
+  padding: 0.2rem 0.6rem;
+  font-size: $fs-xs;
+  font-weight: $fw-semibold;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: $fg;
+  background: $bg;
+  border-radius: $rad-pill;
+}
+
+// ---------- Truncation ----------
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -1,1 +1,6 @@
-/* You can add global styles to this file, and also import other style files */
+// ============================================================
+//  Styles globaux — TaxiFleet
+//  Le design system complet (tokens, mixins, base) se trouve
+//  dans src/styles/. Ce fichier se contente de l'importer.
+// ============================================================
+@use './styles/index' as *;

@@ -1,0 +1,95 @@
+// ============================================================
+//  Design tokens — TaxiFleet
+//  Palette identique a l'interface Thymeleaf existante
+// ============================================================
+
+// ---------- Couleurs ----------
+$ink: #1c2333;
+$ink-soft: #55627a;
+$paper: #f6f3ee;
+$paper-2: #fffdf9;
+$card: #ffffff;
+$line: #e7e1d7;
+
+$brand: #b5441f;
+$brand-2: #e2725b;
+$brand-ink: #8c2f12;
+$brand-soft: #fbeae4;
+
+$teal: #1f7a70;
+$teal-soft: #e0efe9;
+
+$gold: #c9922b;
+$gold-soft: #f7ecd2;
+
+$danger: #b12a2a;
+$danger-soft: #fbe3e3;
+
+$ok: #2e7d32;
+$ok-soft: #e3f2e3;
+
+$info: #2c5f8a;
+$info-soft: #e4eef7;
+
+// ---------- Typographie ----------
+$font: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+$font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+
+$fs-xs: 0.75rem;
+$fs-sm: 0.8125rem;
+$fs-base: 0.9375rem;
+$fs-md: 1rem;
+$fs-lg: 1.125rem;
+$fs-xl: 1.375rem;
+$fs-2xl: 1.75rem;
+$fs-3xl: 2.25rem;
+
+$lh-tight: 1.2;
+$lh-base: 1.55;
+
+$fw-regular: 400;
+$fw-medium: 500;
+$fw-semibold: 600;
+$fw-bold: 700;
+
+// ---------- Espacements ----------
+$space-1: 0.25rem;
+$space-2: 0.5rem;
+$space-3: 0.75rem;
+$space-4: 1rem;
+$space-5: 1.25rem;
+$space-6: 1.5rem;
+$space-8: 2rem;
+$space-10: 2.5rem;
+$space-12: 3rem;
+$space-16: 4rem;
+
+// ---------- Rayons ----------
+$rad-sm: 9px;
+$rad: 14px;
+$rad-lg: 20px;
+$rad-pill: 999px;
+
+// ---------- Ombres ----------
+$shadow-sm: 0 1px 3px rgba(28, 35, 51, 0.08), 0 1px 2px rgba(28, 35, 51, 0.06);
+$shadow-md: 0 8px 24px rgba(28, 35, 51, 0.1);
+$shadow-lg: 0 18px 44px rgba(28, 35, 51, 0.16);
+
+// ---------- Points de rupture ----------
+$bp-sm: 576px;
+$bp-md: 768px;
+$bp-lg: 992px;
+$bp-xl: 1200px;
+
+// ---------- Transitions ----------
+$ease: cubic-bezier(0.4, 0, 0.2, 1);
+$duration-fast: 120ms;
+$duration: 200ms;
+$duration-slow: 320ms;
+
+// ---------- Z-index ----------
+$z-header: 50;
+$z-sidebar: 40;
+$z-dropdown: 60;
+$z-modal: 80;
+$z-toast: 100;
