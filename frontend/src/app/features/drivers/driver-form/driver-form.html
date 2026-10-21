@@ -1,0 +1,150 @@
+<section class="driver-form">
+  <header class="page-header">
+    <div>
+      <h1>{{ driverId() ? 'Modifier le chauffeur' : 'Nouveau chauffeur' }}</h1>
+      <p class="subtitle">
+        {{
+          driverId()
+            ? 'Mettez a jour les informations du chauffeur.'
+            : 'Renseignez les informations du nouveau chauffeur.'
+        }}
+      </p>
+    </div>
+  </header>
+
+  @if (error(); as message) {
+    <p class="alert alert-error" role="alert">{{ message }}</p>
+  }
+
+  @if (loading()) {
+    <p class="loading">Chargement...</p>
+  } @else {
+    <form class="card" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <div class="form-grid">
+        <div class="field">
+          <label for="firstName">Prenom</label>
+          <input
+            id="firstName"
+            type="text"
+            formControlName="firstName"
+            placeholder="Marie"
+            [attr.aria-invalid]="form.controls.firstName.invalid && form.controls.firstName.touched"
+          />
+          @if (form.controls.firstName.invalid && form.controls.firstName.touched) {
+            <small class="error">Le prenom est obligatoire.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="lastName">Nom</label>
+          <input
+            id="lastName"
+            type="text"
+            formControlName="lastName"
+            placeholder="Dupont"
+            [attr.aria-invalid]="form.controls.lastName.invalid && form.controls.lastName.touched"
+          />
+          @if (form.controls.lastName.invalid && form.controls.lastName.touched) {
+            <small class="error">Le nom est obligatoire.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="phone">Telephone</label>
+          <input
+            id="phone"
+            type="tel"
+            formControlName="phone"
+            placeholder="06 11 22 33 44"
+            [attr.aria-invalid]="form.controls.phone.invalid && form.controls.phone.touched"
+          />
+          @if (form.controls.phone.invalid && form.controls.phone.touched) {
+            <small class="error">Le telephone est obligatoire.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="licenseNumber">Numero de permis</label>
+          <input
+            id="licenseNumber"
+            type="text"
+            formControlName="licenseNumber"
+            placeholder="P-2020-11580"
+            [attr.aria-invalid]="form.controls.licenseNumber.invalid && form.controls.licenseNumber.touched"
+          />
+          @if (form.controls.licenseNumber.invalid && form.controls.licenseNumber.touched) {
+            <small class="error">Le numero de permis est obligatoire.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="licenseExpiryDate">Fin de validite du permis</label>
+          <input
+            id="licenseExpiryDate"
+            type="date"
+            formControlName="licenseExpiryDate"
+            [attr.aria-invalid]="form.controls.licenseExpiryDate.invalid && form.controls.licenseExpiryDate.touched"
+          />
+          @if (form.controls.licenseExpiryDate.invalid && form.controls.licenseExpiryDate.touched) {
+            <small class="error">La date de validite est obligatoire.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="hireDate">Date d'embauche</label>
+          <input
+            id="hireDate"
+            type="date"
+            formControlName="hireDate"
+            [attr.aria-invalid]="form.controls.hireDate.invalid && form.controls.hireDate.touched"
+          />
+          @if (form.controls.hireDate.invalid && form.controls.hireDate.touched) {
+            <small class="error">La date d'embauche est obligatoire.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="commissionRate">Commission (%)</label>
+          <input
+            id="commissionRate"
+            type="number"
+            formControlName="commissionRate"
+            placeholder="10"
+            [attr.aria-invalid]="form.controls.commissionRate.invalid && form.controls.commissionRate.touched"
+          />
+          @if (form.controls.commissionRate.invalid && form.controls.commissionRate.touched) {
+            <small class="error">La commission doit etre comprise entre 0 et 100.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="status">Statut</label>
+          <select id="status" formControlName="status">
+            @for (status of statuses; track status) {
+              <option [value]="status">{{ statusLabels[status] }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="vehicleId">Vehicule affecte</label>
+          <select id="vehicleId" formControlName="vehicleId">
+            <option [value]="null">Aucun vehicule</option>
+            @for (vehicle of availableVehicles(); track vehicle.id) {
+              <option [value]="vehicle.id">
+                {{ vehicle.plateNumber }} — {{ vehicle.brand }} {{ vehicle.model }}
+              </option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary" [disabled]="loading()">
+          {{ driverId() ? 'Enregistrer les modifications' : 'Creer le chauffeur' }}
+        </button>
+        <a class="btn btn-secondary" routerLink="/drivers">Annuler</a>
+      </div>
+    </form>
+  }
+</section>
