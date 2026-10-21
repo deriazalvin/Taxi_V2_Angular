@@ -53,6 +53,8 @@
             <th>Validite</th>
             <th>Commission</th>
             <th>Vehicule</th>
+            <th>Statut</th>
+            <th class="actions">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -70,6 +72,26 @@
               </td>
               <td>{{ driver.commissionRate }} %</td>
               <td>{{ driver.vehiclePlate ?? '—' }}</td>
+              <td>
+                <select
+                  class="status-select"
+                  [value]="driver.status"
+                  (change)="onStatusChange(driver, $event)"
+                  [attr.aria-label]="'Statut du chauffeur ' + driver.lastName"
+                >
+                  @for (status of statuses; track status) {
+                    <option [value]="status">{{ statusLabels[status] }}</option>
+                  }
+                </select>
+              </td>
+              <td class="actions">
+                <a class="btn btn-secondary btn-sm" [routerLink]="['/drivers', driver.id, 'edit']">
+                  Modifier
+                </a>
+                <button type="button" class="btn btn-danger btn-sm" (click)="onDelete(driver)">
+                  Supprimer
+                </button>
+              </td>
             </tr>
           }
         </tbody>

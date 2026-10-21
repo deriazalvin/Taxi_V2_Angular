@@ -92,4 +92,52 @@ export class DriverList {
     this.page.set(0);
   }
 
+  /** Change le statut d'un chauffeur depuis la liste. */
+  onStatusChange(driver: Driver, event: Event): void {
+    const status = (event.target as HTMLSelectElement).value as DriverStatus;
+    this.driverService.updateStatus(driver.id, status).subscribe({
+      next: (updated) => {
+        this.drivers.update((list) => list.map((d) => (d.id === updated.id ? updated : d)));
+      },
+      error: () => this.error.set('Impossible de changer le statut du chauffeur.'),
+    });
+  }
+
+  /** Supprime un chauffeur apres confirmation. */
+  onDelete(driver: Driver): void {
+    const confirmed = confirm(
+      `Supprimer definitivement le chauffeur "${driver.firstName} ${driver.lastName}" ?\nCette action est irreversible.`,
+    );
+    if (!confirmed) {
+      return;
+    }
+
+    this.driverService.delete(driver.id).subscribe({
+      next: () => {
+        if (this.drivers().length === 1 && this.page() > 0) {
+          this.page.set(this.page() - 1);
+        } else {
+          this.reload();
+        }
+      },
+      error: () => this.error.set('Impossible de supprimer le chauffeur.'),
+    });
+  }
+
+  private reload(): void {
+    this.driverService
+      .list({
+        page: this.page(),
+        size: this.size(),
+        keyword: this.keyword() || undefined,
+        status: this.statusFilter() || undefined,
+      })
+      .subscribe({
+        next: (result) => {
+          this.drivers.set(result.content);
+          this.total.set(result.totalElements);
+        },
+        error: () => this.error.set('Impossible de charger la liste des chauffeurs.'),
+      });
+  }
 }
