@@ -25,7 +25,12 @@
     <aside class="sidebar" [class.open]="menuOpen()">
       <nav>
         @for (item of navItems(); track item.path) {
-          <a [routerLink]="item.path" (click)="closeMenu()">
+          <a
+            [routerLink]="item.path"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
+            (click)="closeMenu()"
+          >
             {{ item.label }}
           </a>
         }
