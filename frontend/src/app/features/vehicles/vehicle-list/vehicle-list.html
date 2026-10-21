@@ -1,0 +1,67 @@
+<section class="vehicles">
+  <header class="page-header">
+    <div>
+      <h1>Vehicules</h1>
+      <p class="subtitle">{{ total() }} vehicule(s) de la flotte</p>
+    </div>
+    <div class="spacer"></div>
+    <a class="btn-primary" routerLink="/vehicles/new">Nouveau vehicule</a>
+  </header>
+
+  <div class="toolbar">
+    <input
+      type="search"
+      class="search"
+      placeholder="Rechercher (immatriculation, marque, modele)..."
+      [value]="searchInput()"
+      (input)="onSearchInput($any($event.target).value)"
+      aria-label="Rechercher un vehicule"
+    />
+    @if (searchInput()) {
+      <button type="button" class="btn btn-secondary btn-sm" (click)="clearSearch()">Effacer</button>
+    }
+  </div>
+
+  @if (error(); as message) {
+    <p class="alert alert-error" role="alert">{{ message }}</p>
+  }
+
+  @if (loading()) {
+    <p class="loading">Chargement...</p>
+  } @else if (vehicles().length === 0) {
+    <p class="empty-state">Aucun vehicule ne correspond a votre recherche.</p>
+  } @else {
+    <div class="table-wrapper">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Immatriculation</th>
+            <th>Marque / Modele</th>
+            <th>Annee</th>
+            <th>Places</th>
+            <th>Kilometrage</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (vehicle of vehicles(); track vehicle.id) {
+            <tr>
+              <td class="strong">{{ vehicle.plateNumber }}</td>
+              <td>{{ vehicle.brand }} {{ vehicle.model }}</td>
+              <td>{{ vehicle.modelYear }}</td>
+              <td>{{ vehicle.capacity }}</td>
+              <td>{{ vehicle.mileage }} km</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <app-paginator
+      [page]="page()"
+      [size]="size()"
+      [total]="total()"
+      (pageChange)="onPageChange($event)"
+      (sizeChange)="onSizeChange($event)"
+    />
+  }
+</section>

@@ -43,11 +43,8 @@ export const routes: Routes = [
       },
       {
         path: 'vehicles',
-        data: { title: 'Véhicules' },
         loadComponent: () =>
-          import('./features/shared/section-placeholder/section-placeholder').then(
-            (m) => m.SectionPlaceholder,
-          ),
+          import('./features/vehicles/vehicle-list/vehicle-list').then((m) => m.VehicleList),
       },
       {
         path: 'rides',
