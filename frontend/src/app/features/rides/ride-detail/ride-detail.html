@@ -1,0 +1,89 @@
+<section class="ride-detail">
+  <header class="page-header">
+    <div>
+      <h1>{{ ride()?.reference ?? 'Course' }}</h1>
+      @if (ride(); as current) {
+        <p class="subtitle">
+          {{ current.clientName }} — {{ current.pickupLocation }} &rarr; {{ current.destination }}
+        </p>
+      }
+    </div>
+    <div class="spacer"></div>
+    <a class="btn btn-secondary" routerLink="/rides">Retour a la liste</a>
+  </header>
+
+  @if (error(); as message) {
+    <p class="alert alert-error" role="alert">{{ message }}</p>
+  }
+  @if (info(); as message) {
+    <p class="alert alert-success" role="status">{{ message }}</p>
+  }
+
+  @if (loading()) {
+    <p class="loading">Chargement...</p>
+  } @else if (ride(); as current) {
+    <div class="grid">
+      <article class="card">
+        <h2>Details</h2>
+        <dl>
+          <dt>Client</dt>
+          <dd>{{ current.clientName }} — {{ current.clientPhone }}</dd>
+
+          <dt>Trajet</dt>
+          <dd>{{ current.pickupLocation }} &rarr; {{ current.destination }}</dd>
+
+          <dt>Date et heure</dt>
+          <dd>{{ current.rideDateTime | date: 'dd/MM/yyyy HH:mm' }}</dd>
+
+          <dt>Distance</dt>
+          <dd>{{ current.distance }} km</dd>
+
+          <dt>Tarif</dt>
+          <dd>{{ current.fare }} &euro;</dd>
+
+          <dt>Statut</dt>
+          <dd>
+            <span class="status" [attr.data-status]="current.status">
+              {{ statusLabels[current.status] }}
+            </span>
+          </dd>
+
+          @if (current.driverName) {
+            <dt>Chauffeur</dt>
+            <dd>{{ current.driverName }}</dd>
+          }
+
+          @if (current.vehiclePlate) {
+            <dt>Vehicule</dt>
+            <dd>{{ current.vehiclePlate }}</dd>
+          }
+
+          @if (current.assignmentScore !== null) {
+            <dt>Score d'affectation</dt>
+            <dd>{{ current.assignmentScore }}</dd>
+          }
+
+          @if (current.startedAt) {
+            <dt>Demarree le</dt>
+            <dd>{{ current.startedAt | date: 'dd/MM/yyyy HH:mm' }}</dd>
+          }
+
+          @if (current.completedAt) {
+            <dt>Terminee le</dt>
+            <dd>{{ current.completedAt | date: 'dd/MM/yyyy HH:mm' }}</dd>
+          }
+
+          @if (current.cancelReason) {
+            <dt>Motif d'annulation</dt>
+            <dd>{{ current.cancelReason }}</dd>
+          }
+        </dl>
+      </article>
+
+      <article class="card actions-card">
+        <h2>Actions</h2>
+        <p class="muted">Les actions sur la course seront disponibles dans une prochaine etape.</p>
+      </article>
+    </div>
+  }
+</section>
