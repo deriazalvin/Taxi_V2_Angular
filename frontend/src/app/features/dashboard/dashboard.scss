@@ -1,14 +1,41 @@
 @use '../../../styles/index' as *;
 
 .dashboard {
-  padding: $space-6;
+  .page-header {
+    margin-bottom: $space-6;
 
-  h1 {
-    font-size: $fs-2xl;
+    h1 {
+      font-size: $fs-2xl;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: $ink-soft;
+    }
+  }
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: $space-4;
+}
+
+.card {
+  @include card;
+
+  padding: $space-5;
+
+  h2 {
+    margin-bottom: $space-2;
+    font-size: $fs-md;
+    color: $ink-soft;
   }
 
   .placeholder {
-    max-width: 60ch;
+    margin: 0;
+    font-size: $fs-sm;
     color: $ink-soft;
+    opacity: 0.7;
   }
 }

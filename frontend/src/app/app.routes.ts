@@ -19,6 +19,46 @@ export const routes: Routes = [
         loadComponent: () => import('./features/dashboard/dashboard').then((m) => m.Dashboard),
       },
       {
+        path: 'clients',
+        data: { title: 'Clients' },
+        loadComponent: () =>
+          import('./features/shared/section-placeholder/section-placeholder').then(
+            (m) => m.SectionPlaceholder,
+          ),
+      },
+      {
+        path: 'drivers',
+        data: { title: 'Chauffeurs' },
+        loadComponent: () =>
+          import('./features/shared/section-placeholder/section-placeholder').then(
+            (m) => m.SectionPlaceholder,
+          ),
+      },
+      {
+        path: 'vehicles',
+        data: { title: 'Véhicules' },
+        loadComponent: () =>
+          import('./features/shared/section-placeholder/section-placeholder').then(
+            (m) => m.SectionPlaceholder,
+          ),
+      },
+      {
+        path: 'rides',
+        data: { title: 'Courses' },
+        loadComponent: () =>
+          import('./features/shared/section-placeholder/section-placeholder').then(
+            (m) => m.SectionPlaceholder,
+          ),
+      },
+      {
+        path: 'statistics',
+        data: { title: 'Statistiques' },
+        loadComponent: () =>
+          import('./features/shared/section-placeholder/section-placeholder').then(
+            (m) => m.SectionPlaceholder,
+          ),
+      },
+      {
         path: 'admin',
         canActivate: [roleGuard],
         data: { roles: ['ROLE_ADMIN'], title: 'Administration' },
