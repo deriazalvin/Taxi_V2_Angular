@@ -7,8 +7,8 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.5</version>
-        <relativePath/>
+        <version>3.4.0</version>
+        <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <groupId>com.example</groupId>
@@ -16,10 +16,6 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>taxi-fleet</name>
     <description>Système de gestion d'une flotte de taxis</description>
-
-    <properties>
-        <java.version>21</java.version>
-    </properties>
 
     <dependencies>
         <dependency>
@@ -65,11 +61,28 @@
         </dependency>
     </dependencies>
 
+    <properties>
+        <java.version>21</java.version>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <release>21</release>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.2</version>
+                <configuration>
+                    <!-- Conserve uniquement ByteBuddy si nécessaire -->
+                    <argLine>-Dnet.bytebuddy.experimental=true</argLine>
+                </configuration>
             </plugin>
         </plugins>
     </build>

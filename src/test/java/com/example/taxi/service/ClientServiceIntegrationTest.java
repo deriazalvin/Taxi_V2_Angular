@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.example.taxi.TaxiApplication;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -19,10 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-@TestPropertySource(properties = {
-        "spring.datasource.url=jdbc:h2:mem:taxitest;DB_CLOSE_DELAY=-1",
-        "spring.jpa.hibernate.ddl-auto=create-drop"
-})
+
 @Transactional
 class ClientServiceIntegrationTest {
 

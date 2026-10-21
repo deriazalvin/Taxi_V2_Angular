@@ -17,6 +17,7 @@ import com.example.taxi.security.AppRole;
 import com.example.taxi.service.RideService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -38,6 +39,7 @@ public class DemoDataLoader implements CommandLineRunner {
     private final ScoreConfigRepository scoreConfigRepository;
     private final PasswordEncoder passwordEncoder;
     private final RideService rideService;
+    private final String demoPassword;
 
     public DemoDataLoader(AppUserRepository userRepository,
                           DriverRepository driverRepository,
@@ -45,7 +47,8 @@ public class DemoDataLoader implements CommandLineRunner {
                           ClientRepository clientRepository,
                           ScoreConfigRepository scoreConfigRepository,
                           PasswordEncoder passwordEncoder,
-                          RideService rideService) {
+                          RideService rideService,
+                          @Value("${app.demo-data.password:password}") String demoPassword) {
         this.userRepository = userRepository;
         this.driverRepository = driverRepository;
         this.vehicleRepository = vehicleRepository;
@@ -53,6 +56,7 @@ public class DemoDataLoader implements CommandLineRunner {
         this.scoreConfigRepository = scoreConfigRepository;
         this.passwordEncoder = passwordEncoder;
         this.rideService = rideService;
+        this.demoPassword = demoPassword;
     }
 
     @Override
@@ -66,14 +70,14 @@ public class DemoDataLoader implements CommandLineRunner {
         seedClients();
         seedFleet();
         seedRides();
-        log.info("Données de démonstration chargées.");
+        log.info("Donnees de demonstration chargees.");
     }
 
     private void seedUsers() {
-        userRepository.save(new AppUser("admin", passwordEncoder.encode("password"), "Administrateur", AppRole.ROLE_ADMIN));
-        userRepository.save(new AppUser("manager", passwordEncoder.encode("password"), "Responsable exploitation", AppRole.ROLE_MANAGER));
-        userRepository.save(new AppUser("operator", passwordEncoder.encode("password"), "Opérateur radio", AppRole.ROLE_OPERATOR));
-        userRepository.save(new AppUser("user", passwordEncoder.encode("password"), "Consultant", AppRole.ROLE_USER));
+        userRepository.save(new AppUser("admin", passwordEncoder.encode(demoPassword), "Administrateur", AppRole.ROLE_ADMIN));
+        userRepository.save(new AppUser("manager", passwordEncoder.encode(demoPassword), "Responsable exploitation", AppRole.ROLE_MANAGER));
+        userRepository.save(new AppUser("operator", passwordEncoder.encode(demoPassword), "Operateur radio", AppRole.ROLE_OPERATOR));
+        userRepository.save(new AppUser("user", passwordEncoder.encode(demoPassword), "Consultant", AppRole.ROLE_USER));
     }
 
     private void seedScoreConfig() {
@@ -85,14 +89,14 @@ public class DemoDataLoader implements CommandLineRunner {
 
     private void seedClients() {
         if (clientRepository.count() == 0) {
-            clientRepository.save(new Client("Atelier Lumière", "07 10 20 30 40",
+            clientRepository.save(new Client("Atelier Lumiere", "07 10 20 30 40",
                     "contact@atelier-lumiere.fr", "12 rue des Artisans, Paris"));
             clientRepository.save(new Client("Sophie K.", "07 21 32 43 54",
-                    "sophie.k@exemple.fr", "Place de la République, Lyon"));
+                    "sophie.k@exemple.fr", "Place de la Republique, Lyon"));
             clientRepository.save(new Client("M. Bernard", "06 12 34 56 78",
                     null, "Rue de la Paix, Versailles"));
-            clientRepository.save(new Client("Hôtel République", "06 98 76 54 32",
-                    "reservation@hotel-republique.fr", "Hôtel de Ville, Nancy"));
+            clientRepository.save(new Client("Hotel Republique", "06 98 76 54 32",
+                    "reservation@hotel-republique.fr", "Hotel de Ville, Nancy"));
         }
     }
 
@@ -105,7 +109,7 @@ public class DemoDataLoader implements CommandLineRunner {
                 new BigDecimal("12340.0")));
         Vehicle v4 = vehicleRepository.save(new Vehicle("MN-000-OP", "Peugeot", "508", 2016, 4,
                 new BigDecimal("120450.0")));
-        vehicleRepository.save(new Vehicle("QR-111-ST", "Citroën", "C4", 2019, 4,
+        vehicleRepository.save(new Vehicle("QR-111-ST", "Citroen", "C4", 2019, 4,
                 new BigDecimal("77800.0")));
         vehicleRepository.save(new Vehicle("UV-222-WX", "Ford", "Transit", 2018, 9,
                 new BigDecimal("151200.0")));
@@ -122,7 +126,7 @@ public class DemoDataLoader implements CommandLineRunner {
         driverRepository.save(driver("Karim", "Haddad", "06 44 55 66 77", "P-2018-33517",
                 LocalDate.now().plusYears(6), LocalDate.now().minusYears(8), DriverStatus.DISPONIBLE,
                 v4, new BigDecimal("10.00")));
-        driverRepository.save(driver("Léa", "Girard", "06 55 66 77 88", "P-2019-44901",
+        driverRepository.save(driver("Lea", "Girard", "06 55 66 77 88", "P-2019-44901",
                 LocalDate.now().plusYears(4), LocalDate.now().minusYears(1), DriverStatus.INDISPONIBLE,
                 null, new BigDecimal("10.00")));
         driverRepository.save(driver("Antoine", "Roux", "06 66 77 88 99", "P-2022-55231",
@@ -149,20 +153,20 @@ public class DemoDataLoader implements CommandLineRunner {
         Long bernard = clientRepository.findByPhone("06 12 34 56 78").map(Client::getId).orElse(null);
         Long hotel = clientRepository.findByPhone("06 98 76 54 32").map(Client::getId).orElse(null);
 
-        rideService.create(new RideRequest("Atelier Lumière", "07 10 20 30 40",
-                "Gare de Lyon, Paris", "Aéroport CDG, Terminal 2", new BigDecimal("35.0"),
+        rideService.create(new RideRequest("Atelier Lumiere", "07 10 20 30 40",
+                "Gare de Lyon, Paris", "Aeroport CDG, Terminal 2", new BigDecimal("35.0"),
                 LocalDateTime.now().plusHours(2), new BigDecimal("65.00"), atelier));
         rideService.create(new RideRequest("Sophie K.", "07 21 32 43 54",
-                "Place de la République, Lyon", "Zone commerciale Les Grands États", new BigDecimal("12.5"),
+                "Place de la Republique, Lyon", "Zone commerciale Les Grands etats", new BigDecimal("12.5"),
                 LocalDateTime.now().plusHours(3), new BigDecimal("28.00"), sophie));
         rideService.create(new RideRequest("M. Bernard", "06 12 34 56 78",
-                "Rue de la Paix, Versailles", "Marina Yacht Club, Hyères", new BigDecimal("112.0"),
+                "Rue de la Paix, Versailles", "Marina Yacht Club, Hyeres", new BigDecimal("112.0"),
                 LocalDateTime.now().plusDays(1).withHour(8).withMinute(0), new BigDecimal("210.00"), bernard));
 
-        // Une course déjà terminée pour alimenter les statistiques (attribution auto)
+        // Une course deja terminee pour alimenter les statistiques (attribution auto)
         try {
-            var created = rideService.create(new RideRequest("Démo INSEE", "06 98 76 54 32",
-                    "Hôtel de Ville, Nancy", "Centre des Congrès, Nancy", new BigDecimal("6.0"),
+            var created = rideService.create(new RideRequest("Demo INSEE", "06 98 76 54 32",
+                    "Hotel de Ville, Nancy", "Centre des Congres, Nancy", new BigDecimal("6.0"),
                     LocalDateTime.now().minusDays(1).withHour(18).withMinute(30), new BigDecimal("18.00"), hotel));
             var assigned = rideService.assign(created.id(), new AssignRideRequest(null, null));
             if (assigned.status() == com.example.taxi.entity.RideStatus.ASSIGNEE) {
@@ -170,7 +174,7 @@ public class DemoDataLoader implements CommandLineRunner {
                 rideService.complete(created.id());
             }
         } catch (Exception e) {
-            log.warn("Course démo terminée non créée : {}", e.getMessage());
+            log.warn("Course demo terminee non creee : {}", e.getMessage());
         }
     }
 }

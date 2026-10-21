@@ -1,0 +1,54 @@
+# ===== Build =====
+target/
+!.mvn/wrapper/maven-wrapper.jar
+*.jar
+*.war
+
+# ===== Frontend Angular (a venir) =====
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/.vite/
+npm-debug.log*
+
+# ===== IDE (Eclipse / IntelliJ / VS Code) =====
+.idea/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+nbproject/
+.vscode/
+*.swp
+
+# Outils locaux (non pertinent pour le projet)
+.github/modernize/
+
+# ===== Fichiers locaux & SECRETS (ne jamais publier) =====
+application-local.properties
+src/main/resources/application-local.properties
+.env
+.env.*
+!.env.example
+secrets.properties
+*.pem
+*.key
+*.p12
+*.jks
+
+# ===== Bases de donnees locales =====
+data/
+*.db
+*.mv.db
+*.trace.db
+*.h2.db
+
+# ===== Logs =====
+*.log
+logs/
+
+# ===== Systeme =====
+.DS_Store
+Thumbs.db
