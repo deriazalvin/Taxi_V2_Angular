@@ -95,6 +95,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/admin/admin-users/admin-users').then((m) => m.AdminUsers),
       },
+      {
+        path: 'admin/score',
+        canActivate: [roleGuard],
+        data: { roles: ['ROLE_ADMIN'], title: 'Scoring' },
+        loadComponent: () =>
+          import('./features/admin/admin-score/admin-score').then((m) => m.AdminScore),
+      },
     ],
   },
   {

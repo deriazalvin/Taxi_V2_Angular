@@ -1,0 +1,14 @@
+@use '../../../../styles/index' as *;
+
+.admin-score {
+  max-width: 640px;
+
+  form.card {
+    padding: $space-6;
+  }
+
+  .hint {
+    font-size: $fs-xs;
+    color: $ink-soft;
+  }
+}

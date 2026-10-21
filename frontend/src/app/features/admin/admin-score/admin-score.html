@@ -1,0 +1,72 @@
+<section class="admin-score">
+  <header class="page-header">
+    <div>
+      <h1>Configuration du scoring</h1>
+      <p class="subtitle">Poids utilises pour classer les chauffeurs lors d'une affectation</p>
+    </div>
+  </header>
+
+  @if (error(); as message) {
+    <p class="alert alert-error" role="alert">{{ message }}</p>
+  }
+  @if (info(); as message) {
+    <p class="alert alert-success" role="status">{{ message }}</p>
+  }
+
+  @if (loading()) {
+    <p class="loading">Chargement...</p>
+  } @else {
+    <form class="card" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <div class="field">
+        <label for="loadWeight">Poids de la charge de travail</label>
+        <input
+          id="loadWeight"
+          type="number"
+          step="0.1"
+          formControlName="loadWeight"
+          [attr.aria-invalid]="form.controls.loadWeight.invalid && form.controls.loadWeight.touched"
+        />
+        <small class="hint">Entre 0,1 et 10 — favorise les chauffeurs les moins charges.</small>
+        @if (form.controls.loadWeight.invalid && form.controls.loadWeight.touched) {
+          <small class="error">La valeur doit etre comprise entre 0,1 et 10.</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="seniorityWeight">Poids de l'anciennete</label>
+        <input
+          id="seniorityWeight"
+          type="number"
+          step="0.1"
+          formControlName="seniorityWeight"
+          [attr.aria-invalid]="form.controls.seniorityWeight.invalid && form.controls.seniorityWeight.touched"
+        />
+        <small class="hint">Entre 0 et 10 — favorise les chauffeurs les plus experimentes.</small>
+        @if (form.controls.seniorityWeight.invalid && form.controls.seniorityWeight.touched) {
+          <small class="error">La valeur doit etre comprise entre 0 et 10.</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="vehicleWeight">Poids du vehicule</label>
+        <input
+          id="vehicleWeight"
+          type="number"
+          step="0.1"
+          formControlName="vehicleWeight"
+          [attr.aria-invalid]="form.controls.vehicleWeight.invalid && form.controls.vehicleWeight.touched"
+        />
+        <small class="hint">Entre 0 et 10 — tient compte de la capacite du vehicule.</small>
+        @if (form.controls.vehicleWeight.invalid && form.controls.vehicleWeight.touched) {
+          <small class="error">La valeur doit etre comprise entre 0 et 10.</small>
+        }
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary" [disabled]="busy()">
+          {{ busy() ? 'Enregistrement...' : 'Enregistrer' }}
+        </button>
+      </div>
+    </form>
+  }
+</section>
