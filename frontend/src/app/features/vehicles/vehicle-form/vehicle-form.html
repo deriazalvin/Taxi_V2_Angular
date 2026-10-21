@@ -1,0 +1,126 @@
+<section class="vehicle-form">
+  <header class="page-header">
+    <div>
+      <h1>{{ vehicleId() ? 'Modifier le vehicule' : 'Nouveau vehicule' }}</h1>
+      <p class="subtitle">
+        {{
+          vehicleId()
+            ? 'Mettez a jour les informations du vehicule.'
+            : 'Renseignez les informations du nouveau vehicule.'
+        }}
+      </p>
+    </div>
+  </header>
+
+  @if (error(); as message) {
+    <p class="alert alert-error" role="alert">{{ message }}</p>
+  }
+
+  @if (loading()) {
+    <p class="loading">Chargement...</p>
+  } @else {
+    <form class="card" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <div class="form-grid">
+        <div class="field">
+          <label for="plateNumber">Immatriculation</label>
+          <input
+            id="plateNumber"
+            type="text"
+            formControlName="plateNumber"
+            placeholder="AB-123-CD"
+            [attr.aria-invalid]="form.controls.plateNumber.invalid && form.controls.plateNumber.touched"
+          />
+          @if (form.controls.plateNumber.invalid && form.controls.plateNumber.touched) {
+            <small class="error">L'immatriculation est obligatoire (20 caracteres maximum).</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="brand">Marque</label>
+          <input
+            id="brand"
+            type="text"
+            formControlName="brand"
+            placeholder="Toyota"
+            [attr.aria-invalid]="form.controls.brand.invalid && form.controls.brand.touched"
+          />
+          @if (form.controls.brand.invalid && form.controls.brand.touched) {
+            <small class="error">La marque est obligatoire.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="model">Modele</label>
+          <input
+            id="model"
+            type="text"
+            formControlName="model"
+            placeholder="Prius"
+            [attr.aria-invalid]="form.controls.model.invalid && form.controls.model.touched"
+          />
+          @if (form.controls.model.invalid && form.controls.model.touched) {
+            <small class="error">Le modele est obligatoire.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="modelYear">Annee</label>
+          <input
+            id="modelYear"
+            type="number"
+            formControlName="modelYear"
+            placeholder="2021"
+            [attr.aria-invalid]="form.controls.modelYear.invalid && form.controls.modelYear.touched"
+          />
+          @if (form.controls.modelYear.invalid && form.controls.modelYear.touched) {
+            <small class="error">L'annee est obligatoire (1950 - 2100).</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="capacity">Nombre de places</label>
+          <input
+            id="capacity"
+            type="number"
+            formControlName="capacity"
+            placeholder="4"
+            [attr.aria-invalid]="form.controls.capacity.invalid && form.controls.capacity.touched"
+          />
+          @if (form.controls.capacity.invalid && form.controls.capacity.touched) {
+            <small class="error">Le nombre de places est obligatoire (1 - 20).</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="mileage">Kilometrage</label>
+          <input
+            id="mileage"
+            type="number"
+            formControlName="mileage"
+            placeholder="45230"
+            [attr.aria-invalid]="form.controls.mileage.invalid && form.controls.mileage.touched"
+          />
+          @if (form.controls.mileage.invalid && form.controls.mileage.touched) {
+            <small class="error">Le kilometrage est obligatoire.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="status">Statut</label>
+          <select id="status" formControlName="status">
+            @for (status of statuses; track status) {
+              <option [value]="status">{{ statusLabels[status] }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary" [disabled]="loading()">
+          {{ vehicleId() ? 'Enregistrer les modifications' : 'Creer le vehicule' }}
+        </button>
+        <a class="btn btn-secondary" routerLink="/vehicles">Annuler</a>
+      </div>
+    </form>
+  }
+</section>
