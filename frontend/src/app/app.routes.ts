@@ -35,11 +35,8 @@ export const routes: Routes = [
       },
       {
         path: 'drivers',
-        data: { title: 'Chauffeurs' },
         loadComponent: () =>
-          import('./features/shared/section-placeholder/section-placeholder').then(
-            (m) => m.SectionPlaceholder,
-          ),
+          import('./features/drivers/driver-list/driver-list').then((m) => m.DriverList),
       },
       {
         path: 'vehicles',

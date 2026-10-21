@@ -1,0 +1,87 @@
+<section class="drivers">
+  <header class="page-header">
+    <div>
+      <h1>Chauffeurs</h1>
+      <p class="subtitle">{{ total() }} chauffeur(s) enregistre(s)</p>
+    </div>
+    <div class="spacer"></div>
+    <a class="btn-primary" routerLink="/drivers/new">Nouveau chauffeur</a>
+  </header>
+
+  <div class="toolbar">
+    <input
+      type="search"
+      class="search"
+      placeholder="Rechercher (nom, telephone, permis)..."
+      [value]="searchInput()"
+      (input)="onSearchInput($any($event.target).value)"
+      aria-label="Rechercher un chauffeur"
+    />
+    @if (searchInput()) {
+      <button type="button" class="btn btn-secondary btn-sm" (click)="clearSearch()">Effacer</button>
+    }
+
+    <select
+      class="status-filter"
+      [value]="statusFilter()"
+      (change)="onStatusFilterChange($any($event.target).value)"
+      aria-label="Filtrer par statut"
+    >
+      <option value="">Tous les statuts</option>
+      @for (status of statuses; track status) {
+        <option [value]="status">{{ statusLabels[status] }}</option>
+      }
+    </select>
+  </div>
+
+  @if (error(); as message) {
+    <p class="alert alert-error" role="alert">{{ message }}</p>
+  }
+
+  @if (loading()) {
+    <p class="loading">Chargement...</p>
+  } @else if (drivers().length === 0) {
+    <p class="empty-state">Aucun chauffeur ne correspond a vos criteres.</p>
+  } @else {
+    <div class="table-wrapper">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Telephone</th>
+            <th>Permis</th>
+            <th>Validite</th>
+            <th>Commission</th>
+            <th>Vehicule</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (driver of drivers(); track driver.id) {
+            <tr>
+              <td class="strong">{{ driver.firstName }} {{ driver.lastName }}</td>
+              <td>{{ driver.phone }}</td>
+              <td>{{ driver.licenseNumber }}</td>
+              <td>
+                @if (driver.licenseValid) {
+                  <span class="badge">Valide</span>
+                } @else {
+                  <span class="badge badge-danger">Expire</span>
+                }
+              </td>
+              <td>{{ driver.commissionRate }} %</td>
+              <td>{{ driver.vehiclePlate ?? '—' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <app-paginator
+      [page]="page()"
+      [size]="size()"
+      [total]="total()"
+      (pageChange)="onPageChange($event)"
+      (sizeChange)="onSizeChange($event)"
+    />
+  }
+</section>

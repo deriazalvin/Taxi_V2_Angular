@@ -1,0 +1,56 @@
+@use '../../../../styles/index' as *;
+
+.drivers {
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $space-2;
+    margin-bottom: $space-4;
+
+    .search {
+      flex: 1;
+      min-width: 220px;
+      max-width: 420px;
+      padding: 0.5rem 0.8rem;
+      background: $card;
+      border: 1px solid $line;
+      border-radius: $rad-sm;
+
+      &:focus {
+        border-color: $brand;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba($brand, 0.15);
+      }
+    }
+
+    .status-filter {
+      padding: 0.5rem 0.8rem;
+      background: $card;
+      border: 1px solid $line;
+      border-radius: $rad-sm;
+    }
+  }
+
+  .table {
+    td.strong {
+      font-weight: $fw-semibold;
+    }
+
+    td.actions .btn {
+      margin-left: $space-2;
+    }
+
+    .status-select {
+      padding: 0.3rem 0.5rem;
+      font-size: $fs-sm;
+      background: $card;
+      border: 1px solid $line;
+      border-radius: $rad-sm;
+    }
+
+    .badge-danger {
+      @include badge($danger-soft, $danger);
+    }
+  }
+}
