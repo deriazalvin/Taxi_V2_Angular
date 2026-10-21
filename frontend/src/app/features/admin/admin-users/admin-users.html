@@ -1,0 +1,137 @@
+<section class="admin-users">
+  <header class="page-header">
+    <div>
+      <h1>Utilisateurs</h1>
+      <p class="subtitle">{{ users().length }} compte(s) enregistre(s)</p>
+    </div>
+    <div class="spacer"></div>
+    <button type="button" class="btn-primary" (click)="toggleForm()">
+      {{ showForm() ? 'Annuler' : 'Nouveau compte' }}
+    </button>
+  </header>
+
+  @if (error(); as message) {
+    <p class="alert alert-error" role="alert">{{ message }}</p>
+  }
+  @if (info(); as message) {
+    <p class="alert alert-success" role="status">{{ message }}</p>
+  }
+
+  @if (showForm()) {
+    <form class="card create-form" [formGroup]="form" (ngSubmit)="onCreate()" novalidate>
+      <h2>Nouveau compte</h2>
+
+      <div class="form-grid">
+        <div class="field">
+          <label for="username">Identifiant</label>
+          <input
+            id="username"
+            type="text"
+            formControlName="username"
+            placeholder="marie.dupont"
+            [attr.aria-invalid]="form.controls.username.invalid && form.controls.username.touched"
+          />
+          @if (form.controls.username.invalid && form.controls.username.touched) {
+            <small class="error">L'identifiant est obligatoire.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="displayName">Nom affiche</label>
+          <input
+            id="displayName"
+            type="text"
+            formControlName="displayName"
+            placeholder="Marie Dupont"
+            [attr.aria-invalid]="form.controls.displayName.invalid && form.controls.displayName.touched"
+          />
+          @if (form.controls.displayName.invalid && form.controls.displayName.touched) {
+            <small class="error">Le nom affiche est obligatoire.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="password">Mot de passe</label>
+          <input
+            id="password"
+            type="password"
+            formControlName="password"
+            autocomplete="new-password"
+            [attr.aria-invalid]="form.controls.password.invalid && form.controls.password.touched"
+          />
+          @if (form.controls.password.invalid && form.controls.password.touched) {
+            <small class="error">Le mot de passe doit contenir au moins 4 caracteres.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="role">Role</label>
+          <select id="role" formControlName="role">
+            @for (role of roles; track role) {
+              <option [value]="role">{{ roleLabels[role] }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary" [disabled]="busy()">Creer le compte</button>
+      </div>
+    </form>
+  }
+
+  @if (loading()) {
+    <p class="loading">Chargement...</p>
+  } @else {
+    <div class="table-wrapper">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Identifiant</th>
+            <th>Nom affiche</th>
+            <th>Role</th>
+            <th>Etat</th>
+            <th class="actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of users(); track user.id) {
+            <tr>
+              <td class="strong">{{ user.username }}</td>
+              <td>{{ user.displayName }}</td>
+              <td>
+                <select
+                  class="role-select"
+                  [value]="user.role"
+                  (change)="onRoleChange(user, $event)"
+                  [attr.aria-label]="'Role de ' + user.username"
+                >
+                  @for (role of roles; track role) {
+                    <option [value]="role">{{ roleLabels[role] }}</option>
+                  }
+                </select>
+              </td>
+              <td>
+                @if (user.enabled) {
+                  <span class="badge">Actif</span>
+                } @else {
+                  <span class="badge badge-danger">Desactive</span>
+                }
+              </td>
+              <td class="actions">
+                <button
+                  type="button"
+                  class="btn btn-secondary btn-sm"
+                  [disabled]="busy()"
+                  (click)="onToggleEnabled(user)"
+                >
+                  {{ user.enabled ? 'Desactiver' : 'Activer' }}
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

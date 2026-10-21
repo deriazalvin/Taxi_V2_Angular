@@ -1,0 +1,37 @@
+@use '../../../../styles/index' as *;
+
+.admin-users {
+  .create-form {
+    margin-bottom: $space-5;
+
+    h2 {
+      margin-bottom: $space-4;
+      font-size: $fs-md;
+      color: $ink-soft;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  }
+
+  .table {
+    td.strong {
+      font-weight: $fw-semibold;
+    }
+
+    td.actions .btn {
+      margin-left: $space-2;
+    }
+
+    .role-select {
+      padding: 0.3rem 0.5rem;
+      font-size: $fs-sm;
+      background: $card;
+      border: 1px solid $line;
+      border-radius: $rad-sm;
+    }
+
+    .badge-danger {
+      @include badge($danger-soft, $danger);
+    }
+  }
+}
