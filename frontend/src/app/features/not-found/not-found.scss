@@ -1,0 +1,42 @@
+@use '../../../styles/index' as *;
+
+.not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+
+  .code {
+    margin: 0;
+    font-size: $fs-3xl;
+    font-weight: $fw-bold;
+    color: $brand;
+  }
+
+  h1 {
+    margin: $space-2 0 $space-3;
+    font-size: $fs-xl;
+  }
+
+  .message {
+    max-width: 46ch;
+    color: $ink-soft;
+  }
+
+  .btn-primary {
+    @include button-base;
+
+    margin-top: $space-4;
+    padding: 0.65rem 1.1rem;
+    color: $paper-2;
+    background: $brand;
+
+    &:hover {
+      color: $paper-2;
+      background: $brand-ink;
+      text-decoration: none;
+    }
+  }
+}
