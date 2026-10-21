@@ -47,6 +47,16 @@ export const routes: Routes = [
           import('./features/vehicles/vehicle-list/vehicle-list').then((m) => m.VehicleList),
       },
       {
+        path: 'vehicles/new',
+        loadComponent: () =>
+          import('./features/vehicles/vehicle-form/vehicle-form').then((m) => m.VehicleForm),
+      },
+      {
+        path: 'vehicles/:id/edit',
+        loadComponent: () =>
+          import('./features/vehicles/vehicle-form/vehicle-form').then((m) => m.VehicleForm),
+      },
+      {
         path: 'rides',
         data: { title: 'Courses' },
         loadComponent: () =>

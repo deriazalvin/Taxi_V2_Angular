@@ -1,11 +1,11 @@
 import { Component, effect, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Paginator } from '../../../core/shared/paginator/paginator';
-import { Vehicle } from '../../../core/models/vehicle';
+import { Vehicle, VehicleStatus, VEHICLE_STATUSES, VEHICLE_STATUS_LABELS } from '../../../core/models/vehicle';
 import { VehicleService } from '../vehicle.service';
 
 /**
- * Liste des vehicules : tableau, recherche et pagination.
+ * Liste des vehicules : tableau, recherche, filtre de statut et pagination.
  */
 @Component({
   selector: 'app-vehicle-list',
@@ -22,16 +22,25 @@ export class VehicleList {
   readonly size = signal(10);
   readonly keyword = signal('');
   readonly searchInput = signal('');
+  readonly statusFilter = signal<VehicleStatus | ''>('');
 
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
+
+  readonly statuses = VEHICLE_STATUSES;
+  readonly statusLabels = VEHICLE_STATUS_LABELS;
 
   private searchTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor() {
     effect((onCleanup) => {
       const subscription = this.vehicleService
-        .list({ page: this.page(), size: this.size(), keyword: this.keyword() || undefined })
+        .list({
+          page: this.page(),
+          size: this.size(),
+          keyword: this.keyword() || undefined,
+          status: this.statusFilter() || undefined,
+        })
         .subscribe({
           next: (result) => {
             this.vehicles.set(result.content);
@@ -69,6 +78,11 @@ export class VehicleList {
     this.page.set(0);
   }
 
+  onStatusChange(value: string): void {
+    this.statusFilter.set(value as VehicleStatus | '');
+    this.page.set(0);
+  }
+
   onPageChange(page: number): void {
     this.page.set(page);
   }
@@ -76,5 +90,54 @@ export class VehicleList {
   onSizeChange(size: number): void {
     this.size.set(size);
     this.page.set(0);
+  }
+
+  /** Change le statut d'un vehicule depuis la liste. */
+  onStatusChangeFor(vehicle: Vehicle, event: Event): void {
+    const status = (event.target as HTMLSelectElement).value as VehicleStatus;
+    this.vehicleService.updateStatus(vehicle.id, status).subscribe({
+      next: (updated) => {
+        this.vehicles.update((list) => list.map((v) => (v.id === updated.id ? updated : v)));
+      },
+      error: () => this.error.set('Impossible de changer le statut du vehicule.'),
+    });
+  }
+
+  /** Supprime un vehicule apres confirmation. */
+  onDelete(vehicle: Vehicle): void {
+    const confirmed = confirm(
+      `Supprimer definitivement le vehicule "${vehicle.plateNumber}" ?\nCette action est irreversible.`,
+    );
+    if (!confirmed) {
+      return;
+    }
+
+    this.vehicleService.delete(vehicle.id).subscribe({
+      next: () => {
+        if (this.vehicles().length === 1 && this.page() > 0) {
+          this.page.set(this.page() - 1);
+        } else {
+          this.reload();
+        }
+      },
+      error: () => this.error.set('Impossible de supprimer le vehicule.'),
+    });
+  }
+
+  private reload(): void {
+    this.vehicleService
+      .list({
+        page: this.page(),
+        size: this.size(),
+        keyword: this.keyword() || undefined,
+        status: this.statusFilter() || undefined,
+      })
+      .subscribe({
+        next: (result) => {
+          this.vehicles.set(result.content);
+          this.total.set(result.totalElements);
+        },
+        error: () => this.error.set('Impossible de charger la liste des vehicules.'),
+      });
   }
 }

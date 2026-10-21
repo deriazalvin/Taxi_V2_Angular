@@ -20,6 +20,18 @@
     @if (searchInput()) {
       <button type="button" class="btn btn-secondary btn-sm" (click)="clearSearch()">Effacer</button>
     }
+
+    <select
+      class="status-filter"
+      [value]="statusFilter()"
+      (change)="onStatusChange($any($event.target).value)"
+      aria-label="Filtrer par statut"
+    >
+      <option value="">Tous les statuts</option>
+      @for (status of statuses; track status) {
+        <option [value]="status">{{ statusLabels[status] }}</option>
+      }
+    </select>
   </div>
 
   @if (error(); as message) {
@@ -29,7 +41,7 @@
   @if (loading()) {
     <p class="loading">Chargement...</p>
   } @else if (vehicles().length === 0) {
-    <p class="empty-state">Aucun vehicule ne correspond a votre recherche.</p>
+    <p class="empty-state">Aucun vehicule ne correspond a vos criteres.</p>
   } @else {
     <div class="table-wrapper">
       <table class="table">
@@ -40,6 +52,8 @@
             <th>Annee</th>
             <th>Places</th>
             <th>Kilometrage</th>
+            <th>Statut</th>
+            <th class="actions">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -50,6 +64,26 @@
               <td>{{ vehicle.modelYear }}</td>
               <td>{{ vehicle.capacity }}</td>
               <td>{{ vehicle.mileage }} km</td>
+              <td>
+                <select
+                  class="status-select"
+                  [value]="vehicle.status"
+                  (change)="onStatusChangeFor(vehicle, $event)"
+                  [attr.aria-label]="'Statut du vehicule ' + vehicle.plateNumber"
+                >
+                  @for (status of statuses; track status) {
+                    <option [value]="status">{{ statusLabels[status] }}</option>
+                  }
+                </select>
+              </td>
+              <td class="actions">
+                <a class="btn btn-secondary btn-sm" [routerLink]="['/vehicles', vehicle.id, 'edit']">
+                  Modifier
+                </a>
+                <button type="button" class="btn btn-danger btn-sm" (click)="onDelete(vehicle)">
+                  Supprimer
+                </button>
+              </td>
             </tr>
           }
         </tbody>
