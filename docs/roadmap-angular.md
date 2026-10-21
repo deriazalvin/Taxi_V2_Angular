@@ -32,86 +32,86 @@ Le backend Spring Boot expose déjà une API REST complète sous `/api/**`
 
 ### Phase 0 — Socle
 
-- [ ] Feuille de route (ce document)
-- [ ] Endpoint backend `GET /api/me` (utilisateur courant et rôles)
+- [x] Feuille de route (ce document)
+- [x] Endpoint backend `GET /api/me` (utilisateur courant et rôles)
 
 ### Phase 1 — Initialisation Angular
 
-- [ ] Initialisation du projet Angular 22 (standalone, scss, routing)
-- [ ] Fichiers d'environnement (dev / prod) et proxy de dev
-- [ ] Design system SCSS (tokens, mixins, reset)
-- [ ] Module core (interceptors, guards, services de base)
-- [ ] Modèle de pagination (structure `Page` de Spring)
+- [x] Initialisation du projet Angular 22 (standalone, scss, routing)
+- [x] Fichiers d'environnement (dev / prod) et proxy de dev
+- [x] Design system SCSS (tokens, mixins, reset)
+- [x] Module core (interceptors, guards, services de base)
+- [x] Modèle de pagination (structure `Page` de Spring)
 
 ### Phase 2 — Authentification
 
-- [ ] Service d'authentification (HTTP Basic)
-- [ ] Interceptor HTTP Basic et gestion des 401
-- [ ] Page de connexion
-- [ ] Guard d'authentification et guard de rôle
-- [ ] Redirection 401 vers `/login` et persistance de session
+- [x] Service d'authentification (HTTP Basic)
+- [x] Interceptor HTTP Basic et gestion des 401
+- [x] Page de connexion
+- [x] Guard d'authentification et guard de rôle
+- [x] Redirection 401 vers `/login` et persistance de session
 
 ### Phase 3 — Layout et navigation
 
-- [ ] Shell (header + sidebar)
-- [ ] Layout principal
-- [ ] Routes et page d'accueil
-- [ ] Page 404
-- [ ] Navigation active selon la route
+- [x] Shell (header + sidebar)
+- [x] Layout principal
+- [x] Routes et page d'accueil
+- [x] Page 404
+- [x] Navigation active selon la route
 
 ### Phase 4 — Clients
 
-- [ ] Modèle `Client` et service API
-- [ ] Page liste des clients
-- [ ] Pagination et recherche
-- [ ] Formulaire de création
-- [ ] Édition et suppression
+- [x] Modèle `Client` et service API
+- [x] Page liste des clients
+- [x] Pagination et recherche
+- [x] Formulaire de création
+- [x] Édition et suppression
 
 ### Phase 5 — Véhicules
 
-- [ ] Modèle `Vehicle` et service API
-- [ ] Page liste des véhicules
-- [ ] Formulaire véhicule (création et édition)
-- [ ] Actions de statut et suppression
+- [x] Modèle `Vehicle` et service API
+- [x] Page liste des véhicules
+- [x] Formulaire véhicule (création et édition)
+- [x] Actions de statut et suppression
 
 ### Phase 6 — Chauffeurs
 
-- [ ] Modèle `Driver` et service API
-- [ ] Page liste des chauffeurs
-- [ ] Formulaire chauffeur
-- [ ] Changements de statut et vue véhicules disponibles
+- [x] Modèle `Driver` et service API
+- [x] Page liste des chauffeurs
+- [x] Formulaire chauffeur
+- [x] Changements de statut et vue véhicules disponibles
 
 ### Phase 7 — Courses
 
-- [ ] Modèle `Ride` et service API
-- [ ] Page liste des courses avec filtre par statut
-- [ ] Formulaire de création
-- [ ] Page détail
-- [ ] Affectation de chauffeur (liste des candidats)
-- [ ] Actions start / complete / cancel
-- [ ] Vue des courses en attente
+- [x] Modèle `Ride` et service API
+- [x] Page liste des courses avec filtre par statut
+- [x] Formulaire de création
+- [x] Page détail
+- [x] Affectation de chauffeur (liste des candidats)
+- [x] Actions start / complete / cancel
+- [x] Vue des courses en attente
 
 ### Phase 8 — Tableau de bord et statistiques
 
-- [ ] Services statistiques
-- [ ] Page tableau de bord
-- [ ] Page statistiques avec filtres de dates
-- [ ] Graphiques en SCSS
+- [x] Services statistiques
+- [x] Page tableau de bord
+- [x] Page statistiques avec filtres de dates
+- [x] Graphiques en SCSS
 
 ### Phase 9 — Administration
 
-- [ ] Service admin (utilisateurs et configuration du scoring)
-- [ ] Page de gestion des utilisateurs
-- [ ] Page de configuration du scoring
-- [ ] Routes `/admin` restreintes au rôle `ADMIN`
+- [x] Service admin (utilisateurs et configuration du scoring)
+- [x] Page de gestion des utilisateurs
+- [x] Page de configuration du scoring
+- [x] Routes `/admin` restreintes au rôle `ADMIN`
 
 ### Phase 10 — Intégration et build
 
-- [ ] Build Angular dans le cycle Maven (`frontend-maven-plugin`)
-- [ ] Configuration Angular pour la production
-- [ ] Fallback SPA côté Spring Boot
-- [ ] Tests unitaires du front
-- [ ] Mise à jour du README
+- [x] Configuration Angular pour la production (`baseHref`, budgets)
+- [x] Build Angular dans le cycle Maven (`frontend-maven-plugin`)
+- [x] Fallback SPA côté Spring Boot (`/app/**` → `index.html`)
+- [x] Tests unitaires du front
+- [x] Mise à jour du README
 
 ## Commandes de développement
 
@@ -130,3 +130,34 @@ npm start                    # http://localhost:4200 (proxy vers /api)
 - Un commit = une fonctionnalité cohérente
 - Commits en français, préfixe conventionnel : `feat`, `fix`, `chore`, `docs`, `test`
 - Les modifications de code sont préparées puis committées manuellement
+
+## État final
+
+Toutes les phases sont terminées. Récapitulatif :
+
+| Phase | Contenu | Commits |
+|-------|---------|---------|
+| 0 | Socle : roadmap, endpoint `/api/me` | 4 |
+| 1 | Initialisation Angular, environments, proxy, design system | 6 |
+| 2 | Authentification HTTP Basic, interceptor, guards | 5 |
+| 3 | Layout (header + sidebar), routes, 404 | 5 |
+| 4 | Clients : modèle, service, liste, pagination, formulaire | 5 |
+| 5 | Véhicules : modèle, service, liste, formulaire, statuts | 4 |
+| 6 | Chauffeurs : modèle, service, liste, formulaire, statuts | 4 |
+| 7 | Courses : liste, formulaire, détail, affectation, cycle de vie | 7 |
+| 8 | Tableau de bord, statistiques, graphiques CSS | 4 |
+| 9 | Administration : utilisateurs, scoring, garde admin | 4 |
+| 10 | Build Maven, fallback SPA, tests, documentation | 5 |
+
+### Adresses
+
+- Interface Thymeleaf (historique) : `http://localhost:8085/dashboard`
+- Interface Angular : `http://localhost:8085/app/` (ou `http://localhost:4200/app/` en dev)
+- API REST : `http://localhost:8085/api/**`
+
+### Prochaines étapes possibles
+
+- Remplacer la base H2 par MariaDB en local (`application-local.properties`)
+- Retirer l'interface Thymeleaf et basculer le `baseHref` Angular sur `/`
+- Ajouter un rafraîchissement temps réel des courses en attente
+- Ajouter la pagination et la recherche sur les courses en attente

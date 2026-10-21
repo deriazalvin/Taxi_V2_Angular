@@ -1,54 +1,92 @@
-# Taxi_V2_Angular — Gestion de flotte de taxis (V2)
+# Taxi_V2_Angular — Gestion de flotte de taxis
 
 Application web de gestion d'une flotte de taxis : clients, chauffeurs, véhicules,
 courses, affectation automatique des chauffeurs, statistiques de chiffre d'affaires
 et configuration du score de rémunération.
 
-> **Version 2** — le backend Spring Boot est fonctionnel. Un **front-end Angular**
-> est en cours d'ajout et viendra remplacer progressivement l'interface Thymeleaf.
+Le dépôt contient **deux applications** :
+
+- un **backend Spring Boot** qui expose l'API REST (`/api/**`) et une interface Thymeleaf
+  historique ;
+- un **front Angular 22** (`frontend/`) qui consomme cette API et remplace progressivement
+  l'interface Thymeleaf.
 
 ## Stack technique
 
-### Backend (actuel)
+### Backend
 
 - Java 21
 - Spring Boot 3.4.0
 - Spring Web, Spring Data JPA, Spring Security, Spring Validation
-- Thymeleaf + Bootstrap (interface web existante)
+- Thymeleaf + Bootstrap (interface historique, encore disponible)
 - API REST sous `/api/**` (HTTP Basic, CSRF désactivé pour l'API)
 - H2 sur fichier par défaut / MariaDB en local
 
-### Frontend (à venir)
+### Frontend
 
-- Angular (dossier `frontend/`), branché sur l'API REST `/api/**`
-- L'API REST existante est déjà prévue pour ça (authentification HTTP Basic,
-  `csrf.disable()` sur `/api/**`)
+- Angular 22 (standalone components, signals, `@if` / `@for`)
+- SCSS maison : design tokens, mixins et classes partagées (`frontend/src/styles/`)
+- Vitest pour les tests unitaires
+- Proxy de développement vers le backend (`frontend/proxy.conf.json`)
 
 ## Fonctionnalités
 
 - **Authentification** avec rôles `ROLE_ADMIN`, `ROLE_MANAGER`, `ROLE_OPERATOR`, `ROLE_USER`
-- **Clients** : CRUD, recherche
-- **Chauffeurs** : CRUD, statut (disponible / en pause / indisponible / suspendu), commission
-- **Véhicules** : CRUD, immatriculation, statut, valeur
-- **Courses** : création, affectation automatique du chauffeur le plus proche,
-  scores de priorité (charge / ancienneté / véhicule), cycle de vie complet
-  (créée → assignée → en cours → terminée)
-- **Statistiques** : chiffre d'affaires par jour, répartition des courses, activité
-- **Administration** : gestion des comptes utilisateurs, configuration du scoring
+- **Clients** : CRUD, recherche, pagination
+- **Chauffeurs** : CRUD, statut (disponible / en pause / en course / indisponible / suspendu),
+  commission, affectation d'un véhicule
+- **Véhicules** : CRUD, immatriculation, statut (disponible / en course / maintenance /
+  hors service), kilométrage
+- **Courses** : création, affectation automatique ou manuelle, liste des candidats avec
+  le score de priorité, cycle de vie complet
+  (créée → assignée → en cours → terminée / annulée)
+- **Tableau de bord et statistiques** : chiffre d'affaires, commissions, activité,
+  répartition par chauffeur et par véhicule, graphiques CSS
+- **Administration** : gestion des comptes utilisateurs (rôle, activation), configuration
+  du scoring d'affectation
 
 ## Démarrage rapide
 
+### Backend seul
+
 ```bash
-git clone https://github.com/deriazalvin/Taxi_V2_Angular.git
-cd Taxi_V2_Angular
 mvn spring-boot:run
 ```
 
-L'application démarre sur <http://localhost:8085>.
+- API REST : <http://localhost:8085/api>
+- Interface Thymeleaf : <http://localhost:8085/dashboard>
+- Console H2 : <http://localhost:8085/h2-console>
 
-> Par défaut, l'application utilise une base **H2 sur fichier** (`./data/taxidb`) :
-> aucune installation de base de données n'est nécessaire pour essayer le projet.
-> Le dossier `data/` est ignoré par git.
+### Front Angular (mode développement)
+
+Dans un second terminal :
+
+```bash
+cd frontend
+npm install
+npm start
+```
+
+- Application : <http://localhost:4200/app/>
+- Les appels `/api` sont relayés vers `http://localhost:8085` par le proxy
+
+> Le backend doit tourner en parallèle (`mvn spring-boot:run`).
+
+### Build complet (backend + front)
+
+```bash
+mvn clean package
+java -jar target/taxi-fleet-0.0.1-SNAPSHOT.jar
+```
+
+Le build Maven installe Node/npm, construit l'application Angular et copie le résultat
+dans le jar, servi par Spring Boot à l'adresse <http://localhost:8085/app/>.
+
+Pour construire **uniquement** le backend (plus rapide) :
+
+```bash
+mvn clean package -Dfrontend.skip=true
+```
 
 ### Comptes de démonstration
 
@@ -68,45 +106,38 @@ Le mot de passe peut être personnalisé via la variable d'environnement
 Les identifiants de base de données ne sont **jamais committés**. Ils se trouvent
 dans `application-local.properties`, un fichier ignoré par git.
 
-1. Copie le fichier d'exemple et renseigne tes identifiants :
-
-   ```bash
-   cp application-local.properties.example application-local.properties
-   ```
-
-2. Remplace `username` et `password` par les tiens, puis relance l'application.
-
-Le fichier est chargé automatiquement grâce à :
-
-```properties
-spring.config.import=optional:file:application-local.properties
+```bash
+cp application-local.properties.example application-local.properties
 ```
 
 Surcharge possible par variables d'environnement :
 
-| Variable      | Usage                                    | Valeur par défaut             |
-|---------------|------------------------------------------|-------------------------------|
-| `DB_URL`      | URL JDBC                                | `jdbc:h2:file:./data/taxidb`   |
-| `DB_DRIVER`   | Driver JDBC                             | `org.h2.Driver`               |
-| `DB_USERNAME` | Utilisateur de la base                  | `sa`                          |
-| `DB_PASSWORD` | Mot de passe de la base                  | *(vide)*                       |
-| `DEMO_PASSWORD` | Mot de passe des comptes de démo       | `password`                    |
+| Variable        | Usage                                | Valeur par défaut           |
+|-----------------|--------------------------------------|-----------------------------|
+| `DB_URL`        | URL JDBC                            | `jdbc:h2:file:./data/taxidb` |
+| `DB_DRIVER`     | Driver JDBC                         | `org.h2.Driver`             |
+| `DB_USERNAME`   | Utilisateur de la base              | `sa`                        |
+| `DB_PASSWORD`   | Mot de passe de la base              | *(vide)*                     |
+| `DEMO_PASSWORD` | Mot de passe des comptes de démo     | `password`                  |
 
 ## Tests
 
 ```bash
+# Backend
 mvn test
+
+# Front
+cd frontend && npm test
 ```
 
 ## Sécurité du dépôt
 
 - `.gitignore` exclut `target/`, `data/`, les fichiers de configuration locale
-  (`application-local.properties`), `.env`, les bases locales, les clés et les
+  (`application-local.properties`), `.env`, les clés, les bases locales et les
   fichiers d'IDE.
 - `application.properties` ne contient **aucun mot de passe** : uniquement des
   valeurs par défaut et des variables d'environnement.
-- `application-local.properties.example` ne contient que des valeurs de remplacement
-  (`CHANGE_MOI`).
+- `application-local.properties.example` ne contient que des valeurs de remplacement.
 - Les accès à la console H2 (`/h2-console`) sont présents pour le développement
   local ; les identifiants réels ne sont pas dans le dépôt.
 
@@ -114,12 +145,13 @@ mvn test
 
 ```
 Taxi_V2_Angular/
-├── pom.xml
+├── pom.xml                          # build Maven (backend + build Angular)
+├── docs/roadmap-angular.md          # feuille de route du front
 ├── application-local.properties.example
 ├── src/main/java/com/example/taxi/
-│   ├── config/        # SecurityConfig, DemoDataLoader
+│   ├── config/        # SecurityConfig, DemoDataLoader, SpaResourceConfig
 │   ├── controller/
-│   │   ├── rest/      # API REST (destinée au front Angular)
+│   │   ├── rest/      # API REST (consommée par Angular)
 │   │   └── web/       # contrôleurs Thymeleaf
 │   ├── dto/           # requête / réponse
 │   ├── entity/        # entités JPA
@@ -133,6 +165,29 @@ Taxi_V2_Angular/
 │   ├── application.properties
 │   ├── static/        # css, js
 │   └── templates/     # vues Thymeleaf
-├── src/test/java/     # tests unitaires / intégration
-└── frontend/          # front-end Angular (à venir)
+├── src/test/java/     # tests backend
+└── frontend/          # application Angular
+    ├── proxy.conf.json
+    └── src/app/
+        ├── core/
+        │   ├── auth/           # AuthService (HTTP Basic)
+        │   ├── guards/         # authGuard, roleGuard, adminGuard
+        │   ├── interceptors/   # authInterceptor
+        │   ├── layout/shell/   # shell (header + sidebar)
+        │   ├── models/         # modèles et types
+        │   └── shared/         # paginator, bar-chart
+        └── features/
+            ├── auth/login/
+            ├── clients/
+            ├── drivers/
+            ├── vehicles/
+            ├── rides/
+            ├── statistics/
+            ├── dashboard/
+            ├── admin/
+            └── not-found/
 ```
+
+## Feuille de route
+
+Le détail des étapes est dans [`docs/roadmap-angular.md`](docs/roadmap-angular.md).
