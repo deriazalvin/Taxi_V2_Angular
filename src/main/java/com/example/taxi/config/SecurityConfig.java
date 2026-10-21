@@ -52,7 +52,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/login", "/css/**", "/js/**", "/img/**",
-                                "/webjars/**", "/error", "/h2-console/**", "/favicon.ico").permitAll()
+                                "/webjars/**", "/error", "/h2-console/**", "/favicon.ico",
+                                "/app/**").permitAll()
                         .requestMatchers("/dashboard", "/rides/**", "/fleet", "/stats",
                                 "/drivers", "/vehicles", "/clients")
                                 .hasAnyRole("ADMIN", "MANAGER", "OPERATOR", "USER")
