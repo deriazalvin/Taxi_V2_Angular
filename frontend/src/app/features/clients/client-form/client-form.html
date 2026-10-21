@@ -1,0 +1,85 @@
+<section class="client-form">
+  <header class="page-header">
+    <div>
+      <h1>Nouveau client</h1>
+      <p class="subtitle">
+        Renseignez les informations du nouveau client.
+      </p>
+    </div>
+  </header>
+
+  @if (error(); as message) {
+    <p class="alert alert-error" role="alert">{{ message }}</p>
+  }
+
+  @if (loading()) {
+    <p class="loading">Chargement...</p>
+  } @else {
+    <form class="card" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <div class="form-grid">
+        <div class="field">
+          <label for="name">Nom</label>
+          <input
+            id="name"
+            type="text"
+            formControlName="name"
+            placeholder="Atelier Lumiere"
+            [attr.aria-invalid]="form.controls.name.invalid && form.controls.name.touched"
+          />
+          @if (form.controls.name.invalid && form.controls.name.touched) {
+            <small class="error">Le nom est obligatoire (80 caracteres maximum).</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="phone">Telephone</label>
+          <input
+            id="phone"
+            type="tel"
+            formControlName="phone"
+            placeholder="07 10 20 30 40"
+            [attr.aria-invalid]="form.controls.phone.invalid && form.controls.phone.touched"
+          />
+          @if (form.controls.phone.invalid && form.controls.phone.touched) {
+            <small class="error">Le telephone est obligatoire (20 caracteres maximum).</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            placeholder="contact@exemple.fr"
+            [attr.aria-invalid]="form.controls.email.invalid && form.controls.email.touched"
+          />
+          @if (form.controls.email.invalid && form.controls.email.touched) {
+            <small class="error">L'email n'est pas valide.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="address">Adresse</label>
+          <input
+            id="address"
+            type="text"
+            formControlName="address"
+            placeholder="12 rue des Artisans, Paris"
+            [attr.aria-invalid]="form.controls.address.invalid && form.controls.address.touched"
+          />
+          @if (form.controls.address.invalid && form.controls.address.touched) {
+            <small class="error">L'adresse est trop longue (160 caracteres maximum).</small>
+          }
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary" [disabled]="loading()">
+          Creer le client
+        </button>
+        <a class="btn btn-secondary" routerLink="/clients">Annuler</a>
+      </div>
+    </form>
+  }
+</section>
