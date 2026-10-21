@@ -8,6 +8,20 @@
     <a class="btn-primary" routerLink="/clients/new">Nouveau client</a>
   </header>
 
+  <div class="toolbar">
+    <input
+      type="search"
+      class="search"
+      placeholder="Rechercher un client (nom, telephone, email)..."
+      [value]="searchInput()"
+      (input)="onSearchInput($any($event.target).value)"
+      aria-label="Rechercher un client"
+    />
+    @if (searchInput()) {
+      <button type="button" class="btn btn-secondary btn-sm" (click)="clearSearch()">Effacer</button>
+    }
+  </div>
+
   @if (error(); as message) {
     <p class="alert alert-error" role="alert">{{ message }}</p>
   }
@@ -15,7 +29,7 @@
   @if (loading()) {
     <p class="loading">Chargement...</p>
   } @else if (clients().length === 0) {
-    <p class="empty-state">Aucun client enregistre pour le moment.</p>
+    <p class="empty-state">Aucun client ne correspond a votre recherche.</p>
   } @else {
     <div class="table-wrapper">
       <table class="table">
@@ -25,6 +39,7 @@
             <th>Telephone</th>
             <th>Email</th>
             <th>Adresse</th>
+            <th class="actions">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -34,10 +49,23 @@
               <td>{{ client.phone }}</td>
               <td>{{ client.email ?? '—' }}</td>
               <td>{{ client.address ?? '—' }}</td>
+              <td class="actions">
+                <a class="btn btn-secondary btn-sm" [routerLink]="['/clients', client.id, 'edit']">
+                  Modifier
+                </a>
+              </td>
             </tr>
           }
         </tbody>
       </table>
     </div>
+
+    <app-paginator
+      [page]="page()"
+      [size]="size()"
+      [total]="total()"
+      (pageChange)="onPageChange($event)"
+      (sizeChange)="onSizeChange($event)"
+    />
   }
 </section>

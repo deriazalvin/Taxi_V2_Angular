@@ -1,0 +1,43 @@
+@use '../../../../styles/index' as *;
+
+.paginator {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $space-3;
+  margin-top: $space-4;
+
+  .info {
+    font-size: $fs-sm;
+    color: $ink-soft;
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    margin-left: auto;
+  }
+
+  .size {
+    padding: 0.3rem 0.5rem;
+    font-size: $fs-sm;
+    background: $card;
+    border: 1px solid $line;
+    border-radius: $rad-sm;
+  }
+
+  .page-number {
+    min-width: 2rem;
+    padding: 0.3rem 0.5rem;
+    color: $ink-soft;
+    background: $card;
+    border-color: $line;
+
+    &.active {
+      color: $paper-2;
+      background: $brand;
+      border-color: $brand;
+    }
+  }
+}

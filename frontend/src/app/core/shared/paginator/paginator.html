@@ -1,0 +1,33 @@
+<nav class="paginator" aria-label="Pagination">
+  <div class="info">
+    {{ from() }}–{{ to() }} sur {{ total() }}
+  </div>
+
+  <div class="controls">
+    <select class="size" [value]="size()" (change)="onSizeChange($event)" aria-label="Elements par page">
+      @for (option of [10, 20, 50]; track option) {
+        <option [value]="option" [selected]="option === size()">{{ option }}</option>
+      }
+    </select>
+
+    <button type="button" class="btn btn-secondary btn-sm" (click)="previous()" [disabled]="!canPrevious()">
+      Precedent
+    </button>
+
+    @for (p of pages(); track p) {
+      <button
+        type="button"
+        class="btn btn-sm page-number"
+        [class.active]="p === page()"
+        [attr.aria-current]="p === page() ? 'page' : null"
+        (click)="goTo(p)"
+      >
+        {{ p + 1 }}
+      </button>
+    }
+
+    <button type="button" class="btn btn-secondary btn-sm" (click)="next()" [disabled]="!canNext()">
+      Suivant
+    </button>
+  </div>
+</nav>
