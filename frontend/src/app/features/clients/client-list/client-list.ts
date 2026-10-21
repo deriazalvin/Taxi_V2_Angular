@@ -92,4 +92,39 @@ export class ClientList {
     this.size.set(size);
     this.page.set(0);
   }
+
+  /** Supprime un client apres confirmation. */
+  onDelete(client: Client): void {
+    const confirmed = confirm(
+      `Supprimer definitivement le client "${client.name}" ?\nCette action est irreversible.`,
+    );
+    if (!confirmed) {
+      return;
+    }
+
+    this.clientService.delete(client.id).subscribe({
+      next: () => {
+        // Si on vient de supprimer le dernier element de la page, on recule d'un cran.
+        if (this.clients().length === 1 && this.page() > 0) {
+          this.page.set(this.page() - 1);
+        } else {
+          this.reload();
+        }
+      },
+      error: () => this.error.set('Impossible de supprimer le client.'),
+    });
+  }
+
+  /** Force le rechargement de la page courante. */
+  private reload(): void {
+    this.clientService
+      .list({ page: this.page(), size: this.size(), keyword: this.keyword() || undefined })
+      .subscribe({
+        next: (result) => {
+          this.clients.set(result.content);
+          this.total.set(result.totalElements);
+        },
+        error: () => this.error.set('Impossible de charger la liste des clients.'),
+      });
+  }
 }

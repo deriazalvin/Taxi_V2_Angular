@@ -12,7 +12,7 @@
     <input
       type="search"
       class="search"
-      placeholder="Rechercher un client (nom, telephone, email)..."
+      placeholder="Rechercher un client (nom, telephone, email)...'"
       [value]="searchInput()"
       (input)="onSearchInput($any($event.target).value)"
       aria-label="Rechercher un client"
@@ -53,6 +53,9 @@
                 <a class="btn btn-secondary btn-sm" [routerLink]="['/clients', client.id, 'edit']">
                   Modifier
                 </a>
+                <button type="button" class="btn btn-danger btn-sm" (click)="onDelete(client)">
+                  Supprimer
+                </button>
               </td>
             </tr>
           }

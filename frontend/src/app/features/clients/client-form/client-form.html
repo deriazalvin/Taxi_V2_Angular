@@ -1,9 +1,9 @@
 <section class="client-form">
   <header class="page-header">
     <div>
-      <h1>Nouveau client</h1>
+      <h1>{{ clientId() ? 'Modifier le client' : 'Nouveau client' }}</h1>
       <p class="subtitle">
-        Renseignez les informations du nouveau client.
+        {{ clientId() ? 'Mettez a jour les informations du client.' : 'Renseignez les informations du nouveau client.' }}
       </p>
     </div>
   </header>
@@ -76,7 +76,7 @@
 
       <div class="form-actions">
         <button type="submit" class="btn-primary" [disabled]="loading()">
-          Creer le client
+          {{ clientId() ? 'Enregistrer les modifications' : 'Creer le client' }}
         </button>
         <a class="btn btn-secondary" routerLink="/clients">Annuler</a>
       </div>

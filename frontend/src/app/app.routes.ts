@@ -29,6 +29,11 @@ export const routes: Routes = [
           import('./features/clients/client-form/client-form').then((m) => m.ClientForm),
       },
       {
+        path: 'clients/:id/edit',
+        loadComponent: () =>
+          import('./features/clients/client-form/client-form').then((m) => m.ClientForm),
+      },
+      {
         path: 'drivers',
         data: { title: 'Chauffeurs' },
         loadComponent: () =>
