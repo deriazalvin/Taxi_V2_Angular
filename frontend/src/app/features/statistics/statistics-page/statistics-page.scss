@@ -1,0 +1,72 @@
+@use '../../../../styles/index' as *;
+
+.statistics {
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: $space-4;
+    margin-bottom: $space-5;
+
+    .field {
+      margin-bottom: 0;
+    }
+
+    .btn-primary {
+      margin-left: auto;
+    }
+  }
+
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: $space-4;
+    margin-bottom: $space-5;
+  }
+
+  .kpi {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+
+    .kpi-label {
+      font-size: $fs-xs;
+      font-weight: $fw-semibold;
+      letter-spacing: 0.05em;
+      color: $ink-soft;
+      text-transform: uppercase;
+    }
+
+    .kpi-value {
+      font-size: $fs-xl;
+      font-weight: $fw-bold;
+      color: $brand-ink;
+    }
+  }
+
+  .columns {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: $space-4;
+    margin-bottom: $space-5;
+  }
+
+  .charts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: $space-4;
+    margin-bottom: $space-5;
+  }
+
+  h2 {
+    margin-bottom: $space-3;
+    font-size: $fs-md;
+    color: $ink-soft;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .muted {
+    color: $ink-soft;
+  }
+}

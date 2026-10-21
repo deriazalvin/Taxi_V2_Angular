@@ -83,10 +83,9 @@ export const routes: Routes = [
       },
       {
         path: 'statistics',
-        data: { title: 'Statistiques' },
         loadComponent: () =>
-          import('./features/shared/section-placeholder/section-placeholder').then(
-            (m) => m.SectionPlaceholder,
+          import('./features/statistics/statistics-page/statistics-page').then(
+            (m) => m.StatisticsPage,
           ),
       },
       {
