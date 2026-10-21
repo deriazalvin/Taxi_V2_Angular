@@ -1,0 +1,35 @@
+@use '../../../../styles/index' as *;
+
+.clients {
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    margin-bottom: $space-4;
+
+    .search {
+      flex: 1;
+      max-width: 420px;
+      padding: 0.5rem 0.8rem;
+      background: $card;
+      border: 1px solid $line;
+      border-radius: $rad-sm;
+
+      &:focus {
+        border-color: $brand;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba($brand, 0.15);
+      }
+    }
+  }
+
+  .table {
+    td.strong {
+      font-weight: $fw-semibold;
+    }
+
+    td.actions .btn {
+      margin-left: $space-2;
+    }
+  }
+}

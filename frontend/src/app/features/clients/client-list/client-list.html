@@ -1,0 +1,43 @@
+<section class="clients">
+  <header class="page-header">
+    <div>
+      <h1>Clients</h1>
+      <p class="subtitle">{{ total() }} client(s) enregistre(s)</p>
+    </div>
+    <div class="spacer"></div>
+    <a class="btn-primary" routerLink="/clients/new">Nouveau client</a>
+  </header>
+
+  @if (error(); as message) {
+    <p class="alert alert-error" role="alert">{{ message }}</p>
+  }
+
+  @if (loading()) {
+    <p class="loading">Chargement...</p>
+  } @else if (clients().length === 0) {
+    <p class="empty-state">Aucun client enregistre pour le moment.</p>
+  } @else {
+    <div class="table-wrapper">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Telephone</th>
+            <th>Email</th>
+            <th>Adresse</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (client of clients(); track client.id) {
+            <tr>
+              <td class="strong">{{ client.name }}</td>
+              <td>{{ client.phone }}</td>
+              <td>{{ client.email ?? '—' }}</td>
+              <td>{{ client.address ?? '—' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

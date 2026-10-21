@@ -1,0 +1,229 @@
+// ============================================================
+//  Classes de composants reutilisables
+// ============================================================
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+// ---------- Boutons ----------
+.btn {
+  @include button-base;
+}
+
+.btn-primary {
+  @include button-base;
+
+  color: $paper-2;
+  background: $brand;
+
+  &:hover:not(:disabled) {
+    background: $brand-ink;
+  }
+}
+
+.btn-secondary {
+  @include button-base;
+
+  color: $ink;
+  background: $card;
+  border-color: $line;
+
+  &:hover:not(:disabled) {
+    border-color: $brand;
+    color: $brand-ink;
+  }
+}
+
+.btn-danger {
+  @include button-base;
+
+  color: $danger;
+  background: $danger-soft;
+
+  &:hover:not(:disabled) {
+    color: $paper-2;
+    background: $danger;
+  }
+}
+
+.btn-sm {
+  padding: 0.3rem 0.6rem;
+  font-size: $fs-xs;
+}
+
+// ---------- Cartes ----------
+.card {
+  @include card;
+
+  padding: $space-5;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+  margin-bottom: $space-4;
+
+  h2 {
+    margin: 0;
+    font-size: $fs-lg;
+  }
+
+  .spacer {
+    margin-left: auto;
+  }
+}
+
+// ---------- Tableaux ----------
+.table-wrapper {
+  overflow-x: auto;
+  border: 1px solid $line;
+  border-radius: $rad;
+  background: $card;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: $space-3 $space-4;
+    text-align: left;
+    border-bottom: 1px solid $line;
+  }
+
+  th {
+    font-size: $fs-xs;
+    font-weight: $fw-bold;
+    letter-spacing: 0.05em;
+    color: $ink-soft;
+    text-transform: uppercase;
+    background: $paper-2;
+    white-space: nowrap;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  tbody tr:hover {
+    background: rgba($brand, 0.03);
+  }
+
+  td.actions {
+    text-align: right;
+    white-space: nowrap;
+  }
+}
+
+// ---------- Badges ----------
+.badge {
+  @include badge($teal-soft, $teal);
+}
+
+.badge-neutral {
+  @include badge($paper, $ink-soft);
+}
+
+// ---------- Formulaires ----------
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  margin-bottom: $space-4;
+
+  label {
+    font-size: $fs-sm;
+    font-weight: $fw-semibold;
+  }
+
+  input,
+  select,
+  textarea {
+    padding: 0.55rem 0.8rem;
+    background: $paper-2;
+    border: 1px solid $line;
+    border-radius: $rad-sm;
+    transition: border-color $duration $ease, box-shadow $duration $ease;
+
+    &:focus {
+      border-color: $brand;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba($brand, 0.15);
+    }
+
+    &[aria-invalid='true'] {
+      border-color: $danger;
+    }
+  }
+
+  .error {
+    font-size: $fs-xs;
+    color: $danger;
+  }
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 0 $space-4;
+}
+
+.form-actions {
+  display: flex;
+  gap: $space-3;
+  margin-top: $space-5;
+  padding-top: $space-4;
+  border-top: 1px solid $line;
+}
+
+// ---------- Alertes ----------
+.alert {
+  margin-bottom: $space-4;
+  padding: $space-3 $space-4;
+  font-size: $fs-sm;
+  border-radius: $rad-sm;
+}
+
+.alert-error {
+  color: $danger;
+  background: $danger-soft;
+}
+
+.alert-success {
+  color: $ok;
+  background: $ok-soft;
+}
+
+// ---------- Etats ----------
+.empty-state {
+  @include empty-state;
+}
+
+.loading {
+  padding: $space-10;
+  color: $ink-soft;
+  text-align: center;
+}
+
+// ---------- En-tete de page ----------
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-4;
+  margin-bottom: $space-5;
+
+  h1 {
+    margin: 0;
+    font-size: $fs-2xl;
+  }
+
+  .subtitle {
+    margin: $space-1 0 0;
+    color: $ink-soft;
+  }
+
+  .spacer {
+    margin-left: auto;
+  }
+}

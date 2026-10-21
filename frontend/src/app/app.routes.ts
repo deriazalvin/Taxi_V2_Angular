@@ -20,11 +20,8 @@ export const routes: Routes = [
       },
       {
         path: 'clients',
-        data: { title: 'Clients' },
         loadComponent: () =>
-          import('./features/shared/section-placeholder/section-placeholder').then(
-            (m) => m.SectionPlaceholder,
-          ),
+          import('./features/clients/client-list/client-list').then((m) => m.ClientList),
       },
       {
         path: 'drivers',
