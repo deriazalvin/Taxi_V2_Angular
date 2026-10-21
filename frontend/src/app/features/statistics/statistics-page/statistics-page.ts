@@ -2,14 +2,15 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivityStats, RevenueStats } from '../../../core/models/statistics';
-import { StatsService } from '../statistics/stats.service';
+import { BarChart, BarChartItem } from '../../../core/shared/bar-chart/bar-chart';
+import { StatsService } from '../stats.service';
 
 /**
  * Page statistiques : filtres de periode, indicateurs et repartitions.
  */
 @Component({
   selector: 'app-statistics-page',
-  imports: [DatePipe, ReactiveFormsModule],
+  imports: [DatePipe, ReactiveFormsModule, BarChart],
   templateUrl: './statistics-page.html',
   styleUrl: './statistics-page.scss',
 })
@@ -22,6 +23,23 @@ export class StatisticsPage {
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
 
+  /** Chiffre d'affaires quotidien, prete pour le graphique. */
+  readonly revenueByDay = computed<BarChartItem[]>(() =>
+    (this.revenue()?.byDay ?? []).map((day) => ({
+      label: day.date,
+      value: day.revenue,
+      hint: day.rideCount + ' course(s)',
+    })),
+  );
+
+  /** Courses par jour, prete pour le graphique. */
+  readonly ridesByDay = computed<BarChartItem[]>(() =>
+    (this.activity()?.byDay ?? []).map((day) => ({
+      label: day.date,
+      value: day.rideCount,
+      hint: day.cancelledCount + ' annulation(s)',
+    })),
+  );
 
   readonly form = this.fb.nonNullable.group({
     from: [this.defaultFrom()],

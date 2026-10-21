@@ -1,0 +1,20 @@
+<div class="bar-chart">
+  @if (items().length === 0) {
+    <p class="empty">Aucune donnee sur la periode.</p>
+  } @else {
+    @for (item of items(); track item.label) {
+      <div class="row">
+        <span class="label" [title]="item.label">{{ item.label }}</span>
+        <span class="track">
+          <span class="bar" [style.width.%]="width(item)"></span>
+        </span>
+        <span class="value">
+          {{ item.value }}{{ unit() }}
+          @if (item.hint) {
+            <em>{{ item.hint }}</em>
+          }
+        </span>
+      </div>
+    }
+  }
+</div>

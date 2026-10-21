@@ -2,6 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ActivityStats, RevenueStats } from '../../core/models/statistics';
+import { BarChart, BarChartItem } from '../../core/shared/bar-chart/bar-chart';
 import { StatsService } from '../statistics/stats.service';
 
 /**
@@ -9,7 +10,7 @@ import { StatsService } from '../statistics/stats.service';
  */
 @Component({
   selector: 'app-dashboard',
-  imports: [DatePipe, RouterLink],
+  imports: [DatePipe, RouterLink, BarChart],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
@@ -21,6 +22,23 @@ export class Dashboard {
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
 
+  /** Chiffre d'affaires quotidien, prete pour le graphique. */
+  readonly revenueByDay = computed<BarChartItem[]>(() =>
+    (this.revenue()?.byDay ?? []).map((day) => ({
+      label: day.date,
+      value: day.revenue,
+      hint: day.rideCount + ' course(s)',
+    })),
+  );
+
+  /** Nombre de courses par jour, prete pour le graphique. */
+  readonly ridesByDay = computed<BarChartItem[]>(() =>
+    (this.activity()?.byDay ?? []).map((day) => ({
+      label: day.date,
+      value: day.rideCount,
+      hint: day.cancelledCount + ' annulation(s)',
+    })),
+  );
 
   constructor() {
     this.load();

@@ -86,6 +86,16 @@
       </article>
     </div>
 
+    <article class="card chart-card">
+      <h2>Chiffre d'affaires par jour</h2>
+      <app-bar-chart [items]="revenueByDay()" unit=" &euro;" />
+    </article>
+
+    <article class="card chart-card">
+      <h2>Courses par jour</h2>
+      <app-bar-chart [items]="ridesByDay()" />
+    </article>
+
     <article class="card highlights">
       <h2>Chauffeur le plus actif</h2>
       <p>

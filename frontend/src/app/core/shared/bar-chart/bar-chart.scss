@@ -1,0 +1,63 @@
+@use '../../../../styles/index' as *;
+
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+
+  .empty {
+    margin: 0;
+    color: $ink-soft;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 120px 1fr 140px;
+    gap: $space-3;
+    align-items: center;
+  }
+
+  .label {
+    font-size: $fs-sm;
+    color: $ink-soft;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .track {
+    display: block;
+    height: 10px;
+    background: rgba($ink, 0.07);
+    border-radius: $rad-pill;
+    overflow: hidden;
+  }
+
+  .bar {
+    display: block;
+    height: 100%;
+    min-width: 2px;
+    background: linear-gradient(90deg, $brand-2, $brand);
+    border-radius: $rad-pill;
+    transition: width $duration-slow $ease;
+  }
+
+  .value {
+    font-size: $fs-sm;
+    font-weight: $fw-semibold;
+    text-align: right;
+
+    em {
+      display: block;
+      font-size: $fs-xs;
+      font-weight: $fw-regular;
+      color: $ink-soft;
+    }
+  }
+}
+
+@include md-down {
+  .bar-chart .row {
+    grid-template-columns: 90px 1fr 100px;
+  }
+}
