@@ -65,11 +65,7 @@ export const routes: Routes = [
       },
       {
         path: 'rides',
-        data: { title: 'Courses' },
-        loadComponent: () =>
-          import('./features/shared/section-placeholder/section-placeholder').then(
-            (m) => m.SectionPlaceholder,
-          ),
+        loadComponent: () => import('./features/rides/ride-list/ride-list').then((m) => m.RideList),
       },
       {
         path: 'statistics',

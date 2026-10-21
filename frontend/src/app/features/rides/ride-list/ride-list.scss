@@ -1,0 +1,74 @@
+@use '../../../../styles/index' as *;
+
+.rides {
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $space-2;
+    margin-bottom: $space-4;
+
+    .search {
+      flex: 1;
+      min-width: 220px;
+      max-width: 420px;
+      padding: 0.5rem 0.8rem;
+      background: $card;
+      border: 1px solid $line;
+      border-radius: $rad-sm;
+
+      &:focus {
+        border-color: $brand;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba($brand, 0.15);
+      }
+    }
+
+    .status-filter {
+      padding: 0.5rem 0.8rem;
+      background: $card;
+      border: 1px solid $line;
+      border-radius: $rad-sm;
+    }
+  }
+
+  .table {
+    td.strong {
+      font-weight: $fw-semibold;
+    }
+
+    td.route {
+      font-size: $fs-sm;
+      color: $ink-soft;
+    }
+
+    td.actions .btn {
+      margin-left: $space-2;
+    }
+  }
+}
+
+// ---------- Badge de statut ----------
+.status {
+  @include badge($paper, $ink-soft);
+
+  &[data-status='EN_ATTENTE'] {
+    @include badge($gold-soft, $gold);
+  }
+
+  &[data-status='ASSIGNEE'] {
+    @include badge($info-soft, $info);
+  }
+
+  &[data-status='EN_COURS'] {
+    @include badge($brand-soft, $brand-ink);
+  }
+
+  &[data-status='TERMINEE'] {
+    @include badge($ok-soft, $ok);
+  }
+
+  &[data-status='ANNULEE'] {
+    @include badge($danger-soft, $danger);
+  }
+}

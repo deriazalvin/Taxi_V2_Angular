@@ -1,0 +1,98 @@
+<section class="rides">
+  <header class="page-header">
+    <div>
+      <h1>Courses</h1>
+      <p class="subtitle">{{ total() }} course(s) enregistree(s)</p>
+    </div>
+    <div class="spacer"></div>
+    <a class="btn-secondary" routerLink="/rides/waiting">En attente</a>
+    <a class="btn-primary" routerLink="/rides/new">Nouvelle course</a>
+  </header>
+
+  <div class="toolbar">
+    <input
+      type="search"
+      class="search"
+      placeholder="Rechercher (reference, client, adresse)..."
+      [value]="searchInput()"
+      (input)="onSearchInput($any($event.target).value)"
+      aria-label="Rechercher une course"
+    />
+    @if (searchInput()) {
+      <button type="button" class="btn btn-secondary btn-sm" (click)="clearSearch()">Effacer</button>
+    }
+
+    <select
+      class="status-filter"
+      [value]="statusFilter()"
+      (change)="onStatusFilterChange($any($event.target).value)"
+      aria-label="Filtrer par statut"
+    >
+      <option value="">Tous les statuts</option>
+      @for (status of statuses; track status) {
+        <option [value]="status">{{ statusLabels[status] }}</option>
+      }
+    </select>
+  </div>
+
+  @if (error(); as message) {
+    <p class="alert alert-error" role="alert">{{ message }}</p>
+  }
+
+  @if (loading()) {
+    <p class="loading">Chargement...</p>
+  } @else if (rides().length === 0) {
+    <p class="empty-state">Aucune course ne correspond a vos criteres.</p>
+  } @else {
+    <div class="table-wrapper">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Reference</th>
+            <th>Client</th>
+            <th>Trajet</th>
+            <th>Date</th>
+            <th>Distance</th>
+            <th>Tarif</th>
+            <th>Chauffeur</th>
+            <th>Statut</th>
+            <th class="actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (ride of rides(); track ride.id) {
+            <tr>
+              <td class="strong">{{ ride.reference }}</td>
+              <td>{{ ride.clientName }}</td>
+              <td class="route">
+                {{ ride.pickupLocation }}
+                <span aria-hidden="true">&rarr;</span>
+                {{ ride.destination }}
+              </td>
+              <td>{{ ride.rideDateTime | date: 'dd/MM/yyyy HH:mm' }}</td>
+              <td>{{ ride.distance }} km</td>
+              <td>{{ ride.fare }} &euro;</td>
+              <td>{{ ride.driverName ?? '—' }}</td>
+              <td>
+                <span class="status" [attr.data-status]="ride.status">
+                  {{ statusLabels[ride.status] }}
+                </span>
+              </td>
+              <td class="actions">
+                <a class="btn btn-secondary btn-sm" [routerLink]="['/rides', ride.id]">Detail</a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <app-paginator
+      [page]="page()"
+      [size]="size()"
+      [total]="total()"
+      (pageChange)="onPageChange($event)"
+      (sizeChange)="onSizeChange($event)"
+    />
+  }
+</section>
